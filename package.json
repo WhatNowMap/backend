@@ -13,8 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.4.8",
-    "typescript": "^5.1.6",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
@@ -26,6 +26,7 @@
     "passport-apple": "^2.0.2",
     "passport-facebook": "^3.0.0",
     "passport-google": "^0.3.0",
+    "ts-node": "^10.9.1",
     "uuid": "^9.0.0"
   }
 }
