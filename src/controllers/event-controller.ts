@@ -49,7 +49,7 @@ module.exports.voteEvent = async function (req, res) {
   try {
     // const userId = req.user._id;
     // temporary User ID, without real user
-    const userId = "testingUserId";
+    const userId = "64d5293ef60b86a66706e65d"
     if (!userId) return res.status(400).send({ errorMessage: "You are not logged in" })
     const eventId = req.params.event_id;
     const { type } = req.params;
@@ -94,7 +94,7 @@ module.exports.voteEvent = async function (req, res) {
 
 module.exports.getUserSavedEvent = async function (req, res) {
   // Temporary without userId
-  
+
 }
 
 module.exports.addNewEvent = async function (req, res) {
@@ -102,11 +102,11 @@ module.exports.addNewEvent = async function (req, res) {
     const { category, location, lag, lng, description, posterJson } = req.body;
     // temporary without userId
     // userId = req.user._id;
-    // const userId = new ObjectId();
+    const userId = "64d5293ef60b86a66706e65d"
     const newEvent = new Event(
       {
-        category, location, lag, lng, description, posterJson,
-        createAt: Date.now(), updateAt: Date.now(), ranking: 0
+        category, location, lag, lng, description, posterJson, userId,
+        createdAt: new Date(), updatedAt: new Date(), ranking: 0
       }
     );
 

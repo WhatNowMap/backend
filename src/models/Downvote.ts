@@ -5,6 +5,10 @@ const downSchema = new Schema({
     id: Number,
     userId: {
         type: ObjectId,
+        ref: "User"
+    },
+    eventId: {
+        type: ObjectId,
         ref: "Event"
     }
 },{ collection: 'downvotes' });
