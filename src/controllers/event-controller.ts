@@ -56,11 +56,11 @@ module.exports.voteEvent = async function (req, res) {
     const eventId = req.params.event_id;
     const { type } = req.params;
     console.log(`userId: ${userId}\neventId: ${eventId}\ntype: ${type}`);
-    
-    if (type === "upvote") {      
+
+    if (type === "upvote") {
       // Check if user up-voted before
       const foundUpvote = await Upvote.findOne({ userId, eventId }).exec();
-      
+
       if (foundUpvote) {
         return req.status(400).send("You up-voted it before");
       }
@@ -69,7 +69,7 @@ module.exports.voteEvent = async function (req, res) {
       const foundDownvote = await Downvote.findOne({ userId, eventId }).exec();
 
       if (foundDownvote) {
-        await Downvote.removeOne({ _id: foundDownvote._id }).exec();
+        await Downvote.findOneAndDelete({ _id: foundDownvote._id }).exec();
       }
 
       const newUpvote = new Upvote({ userId, eventId });
@@ -78,13 +78,15 @@ module.exports.voteEvent = async function (req, res) {
     }
     else if (type === "downvote") {
       const foundDownvote = await Downvote.findOne({ userId, eventId }).exec();
+
       if (foundDownvote) {
         return req.status(400).send("You down-voted it before");
       }
 
-      const foundUpvote = await Upvote.find({ userId, eventId }).exec();
-      if (foundUpvote) {
-        await Upvote.removeOne({ _id: foundUpvote._id }).exec();
+      const foundUpvote = await Upvote.findOne({ userId, eventId }).exec();
+
+      if (foundUpvote) {        
+        await Upvote.findOneAndDelete({ _id: foundUpvote._id }).exec();        
       }
 
       const newDownvote = new Downvote({ userId, eventId });
