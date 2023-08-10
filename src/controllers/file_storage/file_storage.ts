@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../config/firebase";
 
 async function uploadFileToFirebase(file: File, userId, mediaId) {
-  const destinationPath = `${userId}/${mediaId}/${file.name}`; // Define the destination path in the storage bucket
+  const destinationPath = `${userId}/${mediaId}/${file.name}`;
 
   // Create a root reference
   const app = initializeApp(firebaseConfig);
