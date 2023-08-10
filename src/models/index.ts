@@ -7,4 +7,5 @@ module.exports = {
   Report: require("./Report"),
   Upvote: require("./Upvote"),
   User: require("./User"),
+  Bookmark: require("./Bookmark")
 }
