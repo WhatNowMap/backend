@@ -13,4 +13,4 @@ const upvoteSchema = new Schema({
     }
 },{ collection: 'upvotes' });
 
-module.exports = mongoose.model('Updatevote', upvoteSchema)
+module.exports = mongoose.model('Upvote', upvoteSchema)
