@@ -1,3 +1,5 @@
+import { log } from "console";
+
 const { Event, Upvote, Downvote, Bookmark } = require("../models");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose;
@@ -49,20 +51,23 @@ module.exports.voteEvent = async function (req, res) {
   try {
     // const userId = req.user._id;
     // temporary User ID, without real user
-    const userId = "testingUserId";
+    const userId = "64d5293ef60b86a66706e65d"
     if (!userId) return res.status(400).send({ errorMessage: "You are not logged in" })
     const eventId = req.params.event_id;
     const { type } = req.params;
-
-    if (type === "upvote") {
+    console.log(`userId: ${userId}\neventId: ${eventId}\ntype: ${type}`);
+    
+    if (type === "upvote") {      
       // Check if user up-voted before
       const foundUpvote = await Upvote.findOne({ userId, eventId }).exec();
+      
       if (foundUpvote) {
         return req.status(400).send("You up-voted it before");
       }
       // Check if user down-voted before
       // if yes, remove it
-      const foundDownvote = await Downvote.find({ userId, eventId }).exec();
+      const foundDownvote = await Downvote.findOne({ userId, eventId }).exec();
+
       if (foundDownvote) {
         await Downvote.removeOne({ _id: foundDownvote._id }).exec();
       }
@@ -94,7 +99,7 @@ module.exports.voteEvent = async function (req, res) {
 
 module.exports.getUserSavedEvent = async function (req, res) {
   // Temporary without userId
-  
+
 }
 
 module.exports.addNewEvent = async function (req, res) {
@@ -102,11 +107,11 @@ module.exports.addNewEvent = async function (req, res) {
     const { category, location, lag, lng, description, posterJson } = req.body;
     // temporary without userId
     // userId = req.user._id;
-    // const userId = new ObjectId();
+    const userId = "64d5293ef60b86a66706e65d"
     const newEvent = new Event(
       {
-        category, location, lag, lng, description, posterJson,
-        createAt: Date.now(), updateAt: Date.now(), ranking: 0
+        category, location, lag, lng, description, posterJson, userId,
+        createdAt: new Date(), updatedAt: new Date(), ranking: 0
       }
     );
 
