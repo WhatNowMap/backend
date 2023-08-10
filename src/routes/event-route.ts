@@ -2,6 +2,7 @@
 const router = require("express").Router();
 // Import - event controller
 const eventController = require("../controllers").eventController;
+
 // Get Request
 // Get all the events
 router.get("/", eventController.getAllEvents)

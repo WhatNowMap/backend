@@ -1,4 +1,8 @@
-const { Event, Upvote, Downvote, Comment } = require("../models");
+const { Event, Upvote, Downvote, Bookmark } = require("../models");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose;
+
+// Functions
 
 module.exports.getAllEvents = async function (req, res) {
   try {
@@ -8,6 +12,7 @@ module.exports.getAllEvents = async function (req, res) {
     res.status(200).send(foundEvents);
   }
   catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 }
@@ -88,26 +93,31 @@ module.exports.voteEvent = async function (req, res) {
 }
 
 module.exports.getUserSavedEvent = async function (req, res) {
-
+  // Temporary without userId
+  
 }
 
 module.exports.addNewEvent = async function (req, res) {
   try {
     const { category, location, lag, lng, description, posterJson } = req.body;
+    // temporary without userId
     // userId = req.user._id;
-    // temporary User ID, without real user
-    const userId = "testingUserId";
+    // const userId = new ObjectId();
     const newEvent = new Event(
       {
-        category, location, lag, lng, description, posterJson, userId,
+        category, location, lag, lng, description, posterJson,
         createAt: Date.now(), updateAt: Date.now(), ranking: 0
       }
     );
-    
+
+    console.log(newEvent);
+
+
     const savedEvent = await newEvent.save();
     res.status(200).send({ message: "The event is created successfully", savedEvent })
   }
   catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 }
