@@ -1,3 +1,5 @@
+import { log } from "console";
+
 const { Event, Upvote, Downvote, Bookmark } = require("../models");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose;
@@ -53,16 +55,19 @@ module.exports.voteEvent = async function (req, res) {
     if (!userId) return res.status(400).send({ errorMessage: "You are not logged in" })
     const eventId = req.params.event_id;
     const { type } = req.params;
-
-    if (type === "upvote") {
+    console.log(`userId: ${userId}\neventId: ${eventId}\ntype: ${type}`);
+    
+    if (type === "upvote") {      
       // Check if user up-voted before
       const foundUpvote = await Upvote.findOne({ userId, eventId }).exec();
+      
       if (foundUpvote) {
         return req.status(400).send("You up-voted it before");
       }
       // Check if user down-voted before
       // if yes, remove it
-      const foundDownvote = await Downvote.find({ userId, eventId }).exec();
+      const foundDownvote = await Downvote.findOne({ userId, eventId }).exec();
+
       if (foundDownvote) {
         await Downvote.removeOne({ _id: foundDownvote._id }).exec();
       }
