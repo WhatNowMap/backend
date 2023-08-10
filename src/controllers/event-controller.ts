@@ -42,7 +42,9 @@ module.exports.getEventDetails = async function (req, res) {
 
 module.exports.voteEvent = async function (req, res) {
   try {
-    const userId = req.user._id;
+    // const userId = req.user._id;
+    // temporary User ID, without real user
+    const userId = "testingUserId";
     if (!userId) return res.status(400).send({ errorMessage: "You are not logged in" })
     const eventId = req.params.event_id;
     const { type } = req.params;
@@ -87,4 +89,25 @@ module.exports.voteEvent = async function (req, res) {
 
 module.exports.getUserSavedEvent = async function (req, res) {
 
+}
+
+module.exports.addNewEvent = async function (req, res) {
+  try {
+    const { category, location, lag, lng, description, posterJson } = req.body;
+    // userId = req.user._id;
+    // temporary User ID, without real user
+    const userId = "testingUserId";
+    const newEvent = new Event(
+      {
+        category, location, lag, lng, description, posterJson, userId,
+        createAt: Date.now(), updateAt: Date.now(), ranking: 0
+      }
+    );
+    
+    const savedEvent = await newEvent.save();
+    res.status(200).send({ message: "The event is created successfully", savedEvent })
+  }
+  catch (err) {
+    res.status(500).send(err);
+  }
 }

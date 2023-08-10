@@ -14,7 +14,7 @@ router.get("/host/:user_id", eventController.getUserEventHistory);
 
 // POST Request
 // Create a new event
-router.post("/")
+router.post("/", eventController.addNewEvent);
 // Vote Event
 router.post("/eventRating/:event_id/type/:type", eventController.voteEvent)
 module.exports = router;
