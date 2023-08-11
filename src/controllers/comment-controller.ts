@@ -3,15 +3,14 @@ const { User, Comment } = require("../models");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose;
 
-exports.module.createComment = async function (req, res) {
+exports.createComment = async function (req, res) {
   try {
-    const { comment, eventId, contributorUserId } = req.body;
+    const { comment, eventId } = req.body;
     // userId = req.user._id;
     const userId = "64d5293ef60b86a66706e65d";
     const newComment = new Comment({
       comment,
       eventId,
-      contributorUserId,
       createAt: new Date(),
       updatedAt: new Date(),
     });
@@ -24,7 +23,7 @@ exports.module.createComment = async function (req, res) {
   }
 };
 
-exports.module.getCommentsforEvent = async function (req, res) {
+exports.getCommentsforEvent = async function (req, res) {
   try {
     const { eventId } = req.body;
     const comments = Comment.find({ eventId })
@@ -38,7 +37,7 @@ exports.module.getCommentsforEvent = async function (req, res) {
 };
 
 // Not necessary at this Stage.
-exports.module.getCommentsforUser = async function (req, res) {
+exports.getCommentsforUser = async function (req, res) {
   try {
     // const userId = req.user._id;
     const userId = "64d5293ef60b86a66706e65d";
