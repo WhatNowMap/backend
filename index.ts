@@ -5,6 +5,9 @@ const { connectToMongo } = require('./src/config/mongoose.ts');
 const session = require('express-session');
 // const passport = require('./src/controllers/facebook-auth-controller');
 
+const path = require('path');
+require('./auth');
+
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const facebookConfig = require('./src/config/passport.js');
@@ -36,25 +39,28 @@ passport.deserializeUser(function (obj, cb) {
 // Post Request
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+app.use(passport.initialize());
 
 // Routing Control
 app.get('/', (req, res) => {
   res.send('Welcome!');
 });
 
-app.use('/event', eventRouter);
-app.use('/report', reportRouter);
-app.use('/auth/facebook', faceBookAuthRouter);
+const expressSession = session({
+  secret: process.env.SESSION_SECRET,
+  name: 'user',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false },
+});
+
+app.use(expressSession);
+app.use(passport.initialize());
+app.use(passport.session());
 
 const port = process.env.PORT || 8080;
-
+// Router
+require('./src/routes')(app);
 app.listen(port, async () => {
   console.log('The server is running on ' + port);
   connectToMongo();
