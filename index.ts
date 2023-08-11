@@ -22,13 +22,6 @@ passport.use(
   )
 );
 
-// Router
-const {
-  eventRouter,
-  reportRouter,
-  faceBookAuthRouter,
-} = require('./src/routes');
-
 passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
@@ -59,7 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const port = process.env.PORT || 8080;
-// Router
+
 require('./src/routes')(app);
 app.listen(port, async () => {
   console.log('The server is running on ' + port);
