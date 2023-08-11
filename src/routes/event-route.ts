@@ -16,8 +16,6 @@ router.get("/host/:user_id", eventController.getUserEventHistory);
 router.post("/", eventController.addNewEvent);
 // Vote Event
 router.post("/eventRating/:event_id/type/:type", eventController.voteEvent)
-// User add bookmark
-router.post("/bookmark/:is_bookmark/:event_id", eventController.bookmarkEvent)
 
 // Exports
 module.exports = router;
