@@ -1,8 +1,23 @@
 import express from 'express';
 const app: any = express();
+require('dotenv').config();
 const { connectToMongo } = require('./src/config/mongoose.ts');
 const session = require('express-session');
-const passport = require('./src/controllers/facebook-auth-controller');
+// const passport = require('./src/controllers/facebook-auth-controller');
+
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const facebookConfig = require('./src/config/passport.js');
+const facebookAuthController =
+  require('./src/controllers').facebookAuthController;
+
+// Passport OAuth
+passport.use(
+  new FacebookStrategy(
+    facebookConfig,
+    facebookAuthController.handleFacebookAuthentication
+  )
+);
 
 // Router
 const {
@@ -23,7 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: 'your-secret-key', // Change this to your preferred secret key
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
