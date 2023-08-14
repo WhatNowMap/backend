@@ -11,5 +11,8 @@ router.post("/bookmarks", userController.getUserBookmarks)
 // add bookmark
 router.post("/bookmark/:is_bookmark/:event_id", userController.bookmarkEvent)
 
-// Exports
+router.get('/profile/:userId', userController.getProfile)
+
+router.post('/update/:userId', userController.updateUserProfile)
+
 module.exports = router;
