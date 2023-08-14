@@ -21,13 +21,14 @@ passport.use(
   new FacebookStrategy(
     facebookConfig,
     facebookAuthController.handleFacebookAuthentication
-  ),
+  )
+);
+passport.use(
   new GoogleStrategy(
     googleConfig,
     googleAuthController.handleAuthentication
   )
 );
-
 passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
