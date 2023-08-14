@@ -14,15 +14,6 @@
   "devDependencies": {
     "@types/node": "^20.4.8",
     "nodemon": "^3.0.1",
-<<<<<<< HEAD
-    "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "cookie-parser": "^1.4.6",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-=======
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
@@ -34,18 +25,12 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "firebase": "^10.1.0",
->>>>>>> master
     "mongoose": "^7.4.2",
     "oauth": "^0.10.0",
     "passport": "^0.6.0",
     "passport-facebook": "^3.0.0",
     "passport-google": "^0.3.0",
-<<<<<<< HEAD
-    "passport-twitter": "^1.0.4",
-    "ts-node": "^10.9.1",
-=======
     "passport-google-oauth2": "^0.2.0",
->>>>>>> master
     "uuid": "^9.0.0"
   }
 }

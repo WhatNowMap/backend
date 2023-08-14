@@ -7,7 +7,14 @@ const facebookConfig = {
   profileFields: ['email', 'name'],
 };
 
-module.exports = facebookConfig;
+const twitterConfig = {
+  consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_API_SECRET_KEY,
+  callbackURL: "http://localhost:8080/auth/twitter/callback",
+  passReqToCallback: true
+}
+
+module.exports = { facebookConfig, twitterConfig };
 
 // console.log(facebookConfig);
 

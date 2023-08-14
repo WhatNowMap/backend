@@ -10,8 +10,9 @@ require('./auth');
 
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
-const facebookConfig = require('./src/config/passport.js');
-const facebookAuthController =
+const TwitterStrategy = require('passport-twitter').Strategy
+const { facebookConfig, twitterConfig } = require('./src/config/passport.js');
+const { facebookAuthController, twitterAuthController } =
   require('./src/controllers').facebookAuthController;
 
 // Passport OAuth
@@ -21,6 +22,12 @@ passport.use(
     facebookAuthController.handleFacebookAuthentication
   )
 );
+
+// Twitter OAuth
+passport.use(new TwitterStrategy(
+  twitterConfig,
+  twitterAuthController.handleTwitterAuthentication
+));
 
 passport.serializeUser(function (user, cb) {
   cb(null, user);
