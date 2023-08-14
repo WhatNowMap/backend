@@ -1,10 +1,11 @@
 module.exports = {
-  comment: require("./Comment"),
-  downvote: require("./Downvote"),
-  event: require("./Event"),
-  media: require("./Media"),
-  notification: require("./Notification"),
-  report: require("./Report"),
-  upvote: require("./Upvote"),
-  user: require("./User"),
-}
+  Comment: require('./Comment'),
+  Downvote: require('./Downvote'),
+  Event: require('./Event'),
+  Media: require('./Media'),
+  Notification: require('./Notification'),
+  Report: require('./Report'),
+  Upvote: require('./Upvote'),
+  User: require('./User'),
+  Bookmark: require('./Bookmark'),
+};
