@@ -22,7 +22,7 @@ router.get('/auth/google/failure', (req, res)=>{
     res.send("Something went wrong!")
 });
 router.get('/auth/protected', isLoggedIn, (req, res)=>{
-    let name = req.user.userName;
+    let name = req.user.userName;    
     res.send(`Hello ${name}`);
 });
 
