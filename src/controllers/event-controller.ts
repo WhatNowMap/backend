@@ -1,14 +1,21 @@
 import { log } from 'console';
 
-const { Event, Upvote, Downvote } = require('../models');
+const { Event, Upvote, Downvote, Attendance } = require('../models');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose;
 
 // Functions
-
 module.exports.getAllEvents = async function (req, res) {
   try {
-    const foundEvents = await Event.find({})
+    const { location } = req.query;
+    const queryObject: { location?: string } = {};
+
+    if (location) {
+      queryObject.location = location;
+    }
+    console.log(queryObject);
+
+    const foundEvents = await Event.find({ ...queryObject })
       .populate('userId', ['userName'])
       .exec();
     res.status(200).send(foundEvents);
@@ -47,19 +54,18 @@ module.exports.voteEvent = async function (req, res) {
   try {
     // const userId = req.user._id;
     // temporary User ID, without real user
-    const userId = '64d5293ef60b86a66706e65d';
+    const userId = '64da7a95a07af4f59e4f7e3d';
     if (!userId)
       return res.status(400).send({ errorMessage: 'You are not logged in' });
     const eventId = req.params.event_id;
     const { type } = req.params;
-    console.log(`userId: ${userId}\neventId: ${eventId}\ntype: ${type}`);
 
     if (type === 'upvote') {
       // Check if user up-voted before
       const foundUpvote = await Upvote.findOne({ userId, eventId }).exec();
 
       if (foundUpvote) {
-        return req.status(400).send('You up-voted it before');
+        return res.status(400).send('You up-voted it before');
       }
       // Check if user down-voted before
       // if yes, remove it
@@ -71,6 +77,11 @@ module.exports.voteEvent = async function (req, res) {
 
       const newUpvote = new Upvote({ userId, eventId });
       const savedUpvote = await newUpvote.save();
+      // Update the ranking of an event
+      const foundEvent = await Event.findOne({ _id: eventId });
+      foundEvent.ranking += 1;
+      await foundEvent.save();
+
       return res
         .status(200)
         .send({ message: 'The up-vote is created', savedUpvote });
@@ -78,7 +89,7 @@ module.exports.voteEvent = async function (req, res) {
       const foundDownvote = await Downvote.findOne({ userId, eventId }).exec();
 
       if (foundDownvote) {
-        return req.status(400).send('You down-voted it before');
+        return res.status(400).send('You down-voted it before');
       }
 
       const foundUpvote = await Upvote.findOne({ userId, eventId }).exec();
@@ -89,11 +100,17 @@ module.exports.voteEvent = async function (req, res) {
 
       const newDownvote = new Downvote({ userId, eventId });
       const savedDownvote = await newDownvote.save();
+
+      const foundEvent = await Event.findOne({ _id: eventId });
+      foundEvent.ranking -= 1;
+      await foundEvent.save();
+
       return res
         .status(200)
         .send({ message: 'The down-vote is created', savedDownvote });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 };
@@ -103,7 +120,7 @@ module.exports.addNewEvent = async function (req, res) {
     const { category, location, lag, lng, description, posterJson } = req.body;
     // temporary without userId
     // userId = req.user._id;
-    const userId = '64d5293ef60b86a66706e65d';
+    const userId = '64da661a8e8638f42f599f9b';
     const newEvent = new Event({
       category,
       location,
@@ -117,8 +134,6 @@ module.exports.addNewEvent = async function (req, res) {
       ranking: 0,
     });
 
-    console.log(newEvent);
-
     const savedEvent = await newEvent.save();
     res
       .status(200)
@@ -128,3 +143,77 @@ module.exports.addNewEvent = async function (req, res) {
     res.status(500).send(err);
   }
 };
+
+module.exports.getUserVoteHistory = async function (req, res) {
+  try {
+    const userId = req.params.user_id;
+    // Find out the event user created
+    const eventIdList = await Event.find({ userId }).select("_id").exec();
+
+    const upVotesPromises = eventIdList.map(async (item) => {
+      const singleEventUpvote = await Upvote.find({ eventId: item._id });
+      return singleEventUpvote;
+    });
+
+    const downVotesPromises = eventIdList.map(async (item) => {
+      const singleEventDownvote = await Downvote.find({ eventId: item._id });
+      return singleEventDownvote;
+    });
+
+    const upVotes = await Promise.all(upVotesPromises);
+    const downVotes = await Promise.all(downVotesPromises);
+
+    const totalUpVotes = upVotes.reduce((total, votes) => total + votes.length, 0);
+    const totalDownVotes = downVotes.reduce((total, votes) => total + votes.length, 0);
+
+    res.status(200).send({
+      upVoteAmount: totalUpVotes,
+      downVoteAmount: totalDownVotes,
+      upVotes,
+      downVotes,
+    });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+}
+
+module.exports.getEventVotes = async function (req, res) {
+  try {
+    const eventId = req.params.event_id;
+    const upVotes = await Upvote.find({ eventId });
+    const downVotes = await Downvote.find({ eventId });
+
+    res.status(200).send({ upVoteAmount: upVotes.length, downVoteAmount: downVotes.length, upVotes, downVotes });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+}
+
+module.exports.attendEvent = async function (req, res) {
+  try {
+    // const userId = req.user._id;
+    const userId = "64da7a95a07af4f59e4f7e3d";
+    const eventId = req.params.event_id;
+
+    const foundAttendance = await Attendance.findOne({ userId, eventId }).exec();
+    if (foundAttendance) {
+      res.status(400).send({ message: "You already attended to this event" });
+    }
+
+    const newAttendance = new Attendance({
+      userId, eventId
+    });
+
+    const savedAttendance = await newAttendance.save();
+
+    res.status(200).send({ savedAttendance });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+}
