@@ -11,20 +11,23 @@ const userSchema = new Schema(
     createAt: Date,
     fixedLocation: String,
     tag: Array,
+    thirdPartyId: String,
     avatar: {
       type: ObjectId,
       ref: 'Media'
-    }
+    },
   },
   { collection: 'users' }
 );
 
 userSchema.statics.findOrCreate = async function findOrCreate(profile, cb) {
   var userObj = new this();
-  const user = await this.findOne({ googeId: profile.id });
+  const user = await this.findOne({ thirdPartyId: profile.id });
   if (!user) {
     userObj.userName = profile.displayName;
-    userObj.googeId = profile.id;
+    userObj.thirdPartyId = profile.id;
+    userObj.email = profile.email;
+    userObj.provider = profile.provider;
     const newUser = await userObj.save();
     return newUser;
   } else {
