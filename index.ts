@@ -13,7 +13,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy
 const { facebookConfig, twitterConfig } = require('./src/config/passport.js');
 const { facebookAuthController, twitterAuthController } =
-  require('./src/controllers').facebookAuthController;
+  require('./src/controllers');
 
 // Passport OAuth
 passport.use(
@@ -42,9 +42,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 // Routing Control
-app.get('/', (req, res) => {
-  res.send('Welcome!');
-});
+// app.get('/', (req, res) => {
+//   res.send('Welcome!');
+// });
 
 const expressSession = session({
   secret: process.env.SESSION_SECRET,
