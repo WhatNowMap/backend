@@ -14,7 +14,7 @@ const userSchema = new Schema(
     thirdPartyId: String,
     avatar: {
       type: ObjectId,
-      ref: 'Media'
+      ref: 'Media',
     },
   },
   { collection: 'users' }
@@ -31,6 +31,7 @@ userSchema.statics.findOrCreate = async function findOrCreate(profile, cb) {
     const newUser = await userObj.save();
     return newUser;
   } else {
+    console.log('User is in the database!');
     return user;
   }
 };

@@ -42,9 +42,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 // Routing Control
-// app.get('/', (req, res) => {
-//   res.send('Welcome!');
-// });
+app.get('/', (req, res) => {
+  res.send('Welcome!');
+});
 
 const expressSession = session({
   secret: process.env.SESSION_SECRET,
