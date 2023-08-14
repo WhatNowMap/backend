@@ -6,19 +6,25 @@ const session = require('express-session');
 // const passport = require('./src/controllers/facebook-auth-controller');
 
 const path = require('path');
-require('./auth');
-
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
-const facebookConfig = require('./src/config/passport.js');
-const facebookAuthController =
-  require('./src/controllers').facebookAuthController;
+const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
+const { facebookConfig, googleConfig } = require('./src/config/passport.js');
+
+
+const facebookAuthController = require('./src/controllers').facebookAuthController;
+
+const googleAuthController = require('./src/controllers').googleAuthController;
 
 // Passport OAuth
 passport.use(
   new FacebookStrategy(
     facebookConfig,
     facebookAuthController.handleFacebookAuthentication
+  ),
+  new GoogleStrategy(
+    googleConfig,
+    googleAuthController.handleAuthentication
   )
 );
 

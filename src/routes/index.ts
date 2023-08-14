@@ -1,6 +1,7 @@
 module.exports = {
   eventRouter: require("./event-route"),
   reportRouter: require("./report-route"),
+  googleAuthRouter: require("./googleAuth-route"),
   faceBookAuthRouter: require("./facebookAuth-route"),
   userRouter: require("./user-route"),
 };
