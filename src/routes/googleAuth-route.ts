@@ -14,7 +14,7 @@ router.get('/',
 );
 router.get('/callback',
     passport.authenticate( 'google', {
-      successRedirect: '/auth/protected',
+      successRedirect: '/auth/google/success',
       failureRedirect: '/auth/google/failure'
     })
 );
