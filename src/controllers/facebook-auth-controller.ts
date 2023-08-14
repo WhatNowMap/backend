@@ -55,22 +55,17 @@ module.exports.handleFacebookAuthentication = async function (
   cb
 ) {
   try {
-    // const user = await User.findOne({
-    //   accountId: profile.id,
-    //   provider: 'facebook',
-    // });
-    // if (!user) {
-    console.log('Adding new facebook user to DB..');
+    const user = await User.findOrCreate(profile);
+    // console.log('Adding new facebook user to DB..');
 
-    console.log(profile);
-    const user = new User({
-      id: profile.id,
-      userName: profile.displayName,
-      provider: profile.provider,
-    });
-    await user.save();
+    // console.log(profile);
+    // const user = new User({
+    //   id: profile.id,
+    //   userName: profile.displayName,
+    //   provider: profile.provider,
+    // });
     // console.log(user);
-    return cb(null, profile);
+    return cb(null, user);
     // } else {
     //   console.log('Facebook User already exist in DB..');
     //   // console.log(profile);
