@@ -6,8 +6,6 @@ const session = require('express-session');
 // const passport = require('./src/controllers/facebook-auth-controller');
 
 const path = require('path');
-require('./auth');
-
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
