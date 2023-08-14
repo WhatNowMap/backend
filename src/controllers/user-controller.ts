@@ -3,9 +3,11 @@ import { log } from 'console';
 const { Bookmark } = require('../models');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose;
+import { RequestHandler } from 'express';
+const User = require('../models/User');
 
 // Functions
-module.exports.getUserBookmarks = async function (req, res) {
+  module.exports.getUserBookmarks = async function (req, res) {
     try {
       var userId = "64d5293ef60b86a66706e65d";
   
@@ -63,3 +65,20 @@ module.exports.getUserBookmarks = async function (req, res) {
       res.status(500).send(err);
     }
   }
+
+module.exports.updateUserProfile = async(req, res, next) => {
+    const userId = req.params.userId;
+    const userProfile = (req.body as { 
+        userName:string, 
+        email: string,
+        fixedLocation: string,
+        tag: string[]
+    });
+    const result = await User.findOneAndUpdate({_id: userId}, userProfile, {new: true});
+    res.send(result);
+};
+module.exports.getProfile = async(req, res, next) => {
+    const userId = req.params.userId;
+    const user = await User.findById(userId).select('-_id -__v')
+    res.send(user)
+}
