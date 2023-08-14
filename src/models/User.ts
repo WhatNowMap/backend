@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { ObjectId, Schema } = mongoose;
 
 const userSchema = new Schema(
   {
@@ -11,6 +11,10 @@ const userSchema = new Schema(
     createAt: Date,
     fixedLocation: String,
     tag: Array,
+    avatar: {
+      type: ObjectId,
+      ref: 'Media'
+    }
   },
   { collection: 'users' }
 );

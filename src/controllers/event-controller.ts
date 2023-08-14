@@ -1,6 +1,6 @@
 import { log } from 'console';
 
-const { Event, Upvote, Downvote, Bookmark } = require('../models');
+const { Event, Upvote, Downvote } = require('../models');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose;
 
@@ -96,10 +96,6 @@ module.exports.voteEvent = async function (req, res) {
   } catch (err) {
     res.status(500).send(err);
   }
-};
-
-module.exports.getUserSavedEvent = async function (req, res) {
-  // Temporary without userId
 };
 
 module.exports.addNewEvent = async function (req, res) {
