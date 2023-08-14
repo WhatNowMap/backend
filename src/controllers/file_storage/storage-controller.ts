@@ -16,3 +16,15 @@ async function uploadFileToFirebase(file: File, userId, mediaId) {
     console.log("SUCCESS_UPLOAD: Uploaded a blob or file!");
   });
 }
+
+exports.uploadBinary = async function (req, res) {
+  try {
+    const file = req.file;
+    console.log(req.body);
+    console.log(req.file);
+    res.status(200).send(req.body);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+};
