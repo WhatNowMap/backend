@@ -18,7 +18,7 @@ module.exports.getAllEvents = async function (req, res) {
     const foundEvents = await Event.find({ ...queryObject })
       .populate('userId', ['userName'])
       .exec();
-    res.status(200).send(foundEvents);
+    res.status(200).send({ data: foundEvents });
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -31,7 +31,7 @@ module.exports.getUserEventHistory = async function (req, res) {
     const foundEvents = await Event.find({ userId })
       .populate('userId', ['userName'])
       .exec();
-    res.status(200).send(foundEvents);
+    res.status(200).send({ data: foundEvents });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -44,7 +44,7 @@ module.exports.getEventDetails = async function (req, res) {
       .populate('userId', ['userName'])
       .exec();
     console.log(foundEvent);
-    res.status(200).send(foundEvent);
+    res.status(200).send({ data: foundEvent });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -84,7 +84,7 @@ module.exports.voteEvent = async function (req, res) {
 
       return res
         .status(200)
-        .send({ message: 'The up-vote is created', savedUpvote });
+        .send({ message: 'The up-vote is created', data: savedUpvote });
     } else if (type === 'downvote') {
       const foundDownvote = await Downvote.findOne({ userId, eventId }).exec();
 
@@ -107,7 +107,7 @@ module.exports.voteEvent = async function (req, res) {
 
       return res
         .status(200)
-        .send({ message: 'The down-vote is created', savedDownvote });
+        .send({ message: 'The down-vote is created', data: savedDownvote });
     }
   } catch (err) {
     console.log(err);
@@ -137,7 +137,7 @@ module.exports.addNewEvent = async function (req, res) {
     const savedEvent = await newEvent.save();
     res
       .status(200)
-      .send({ message: 'The event is created successfully', savedEvent });
+      .send({ message: 'The event is created successfully', data: savedEvent });
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -210,7 +210,7 @@ module.exports.attendEvent = async function (req, res) {
 
     const savedAttendance = await newAttendance.save();
 
-    res.status(200).send({ savedAttendance });
+    res.status(200).send({ data: savedAttendance });
   }
   catch (err) {
     console.log(err);
