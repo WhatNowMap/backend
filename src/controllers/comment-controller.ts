@@ -13,6 +13,7 @@ exports.createComment = async function (req, res) {
       eventId,
       createAt: new Date(),
       updatedAt: new Date(),
+      userId: req.user._id,
     });
 
     const addComment = await newComment.save();
@@ -23,12 +24,27 @@ exports.createComment = async function (req, res) {
   }
 };
 
-exports.getCommentsforEvent = async function (req, res) {
+exports.getCommentDetail = async function (req, res) {
   try {
-    const { eventId } = req.body;
-    const comments = Comment.find({ eventId })
+    const _id = req.params.comment_id;
+    const comments = await Comment.findOne({ _id })
       .populate("userId", "userName avatar")
       .exec();
+    console.log(comments);
+    res.status(200).send(comments);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+};
+
+exports.getCommentsforEvent = async function (req, res) {
+  try {
+    const _id = req.params.event_id;
+    const comments = await Comment.find({ eventId: _id })
+      .populate("userId", "userName avatar")
+      .exec();
+    console.log(comments);
     res.status(200).send(comments);
   } catch (err) {
     console.log(err);
@@ -40,8 +56,9 @@ exports.getCommentsforEvent = async function (req, res) {
 exports.getCommentsforUser = async function (req, res) {
   try {
     // const userId = req.user._id;
-    const userId = "64d5293ef60b86a66706e65d";
-    const comments = Comment.find({ userId }).exec();
+    const userId = "64da67a70c79bf282c2afd9d";
+    const comments = await Comment.find({ userId: userId }).exec();
+    console.log(comments);
     res.status(200).send(comments);
   } catch (err) {
     console.log(err);

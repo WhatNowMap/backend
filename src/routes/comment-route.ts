@@ -10,7 +10,9 @@ router.post("/", commentController.createComment);
 // GET Request
 // Get all comments of an Event
 router.get("/event/:event_id", commentController.getCommentsforEvent);
-// Get user's comment history
-router.get("/user/:user_id", commentController.getCommentsforUser);
+// Get the comment's detail
+router.get("/detail/:comment_id", commentController.getCommentDetail);
+// Get the user's comment history
+router.get("/user", commentController.getCommentsforUser);
 
 module.exports = router;
