@@ -10,7 +10,7 @@ const facebookConfig = {
 const twitterConfig = {
   consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_API_SECRET_KEY,
-  callbackURL: "http://localhost:8080/auth/twitter/callback",
+  callbackURL: process.env.TWITTER_CALLBACK_URL,
   passReqToCallback: true
 }
 
