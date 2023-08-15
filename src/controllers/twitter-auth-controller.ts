@@ -52,24 +52,13 @@ const signout = async (req, res) => {
 //     });
 // }
 
-const handleTwitterAuthentication = async function (token, tokenSecret, profile, done) {
+const handleTwitterAuthentication = async function (token, tokenSecret, profile, cb) {
     try {
-        // const user = await User.findOne({
-        //   accountId: profile.id,
-        //   provider: 'twitter',
-        // });
-        // if (!user) {
-        console.log('Adding new twitter user to DB..');
-
-        console.log(profile);
-        const user = new User({
-            id: profile.id,
-            userName: profile.displayName,
-            provider: profile.provider,
+        User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+            return cb(err, user);
         });
-        await user.save();
+
         // console.log(user);
-        return done(null, profile);
         // } else {
         //   console.log('Twitter User already exist in DB..');
         // console.log(profile);

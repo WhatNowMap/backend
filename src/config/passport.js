@@ -14,7 +14,19 @@ const twitterConfig = {
   passReqToCallback: true
 }
 
-module.exports = { facebookConfig, twitterConfig };
+const googleConfig = {
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL,
+  passReqToCallback: true
+};
+
+module.exports = {
+  facebookConfig,
+  googleConfig,
+  twitterConfig
+}
 
 // console.log(facebookConfig);
 

@@ -64,7 +64,6 @@ module.exports.handleFacebookAuthentication = async function (
     //   userName: profile.displayName,
     //   provider: profile.provider,
     // });
-    await user.save();
     // console.log(user);
     return cb(null, user);
     // } else {

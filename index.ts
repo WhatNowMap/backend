@@ -6,14 +6,13 @@ const session = require('express-session');
 // const passport = require('./src/controllers/facebook-auth-controller');
 
 const path = require('path');
-require('./auth');
-
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy
-const { facebookConfig, twitterConfig } = require('./src/config/passport.js');
-const { facebookAuthController, twitterAuthController } =
+const { facebookAuthController, twitterAuthController, googleAuthController } =
   require('./src/controllers');
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const { facebookConfig, googleConfig, twitterConfig } = require('./src/config/passport.js');
 
 // Passport OAuth
 passport.use(
@@ -29,6 +28,12 @@ passport.use(new TwitterStrategy(
   twitterAuthController.handleTwitterAuthentication
 ));
 
+passport.use(
+  new GoogleStrategy(
+    googleConfig,
+    googleAuthController.handleAuthentication
+  )
+);
 passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
