@@ -4,6 +4,7 @@ const { Schema, ObjectId } = mongoose;
 const mediaSchema = new Schema(
   {
     id: Number,
+    url: String,
     path: String,
     createdAt: Date,
     updatedAt: Date,

@@ -1,7 +1,7 @@
 // Router & Multer
 const router = require("express").Router();
 const multer = require("multer");
-// Import - event controller
+// Import - storage controller
 const storageController = require("../controllers/file_storage/storage-controller");
 const upload = multer();
 // POST Request
@@ -9,7 +9,7 @@ const upload = multer();
 router.post("/upload", upload.single("media"), storageController.uploadBinary);
 
 // GET Request
-// Get all comments of an Event
-// router.get("/event/:event_id", storageController.getCommentsforEvent);
+// Get media from fs
+router.get("/retrieve", storageController.getMedia);
 
 module.exports = router;
