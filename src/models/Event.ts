@@ -3,9 +3,10 @@ const { Schema, ObjectId } = mongoose;
 
 const eventSchema = new Schema({
   id: Number,
+  name: String,
   category: {
     type: String,
-    enum : ["A", "B", "C"],
+    enum: ["A", "B", "C"],
     default: ''
   },
   createdAt: Date,
@@ -16,10 +17,10 @@ const eventSchema = new Schema({
   description: String,
   posterJson: String,
   ranking: Number,
-  userId:{
+  userId: {
     type: ObjectId,
     ref: "User"
   }
-},{ collection: 'events' });
+}, { collection: 'events' });
 
 module.exports = mongoose.model('Event', eventSchema)
