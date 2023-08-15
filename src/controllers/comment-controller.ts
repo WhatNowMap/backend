@@ -1,19 +1,21 @@
 // get comment create comment
-const { User, Comment } = require("../models");
+const { Comment } = require("../models");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose;
 
 exports.createComment = async function (req, res) {
   try {
-    const { comment, eventId } = req.body;
+    const { comment, eventId, mediaIds } = req.body;
     // userId = req.user._id;
     const userId = "64d5293ef60b86a66706e65d";
     const newComment = new Comment({
       comment,
       eventId,
+      mediaIds,
       createAt: new Date(),
       updatedAt: new Date(),
       userId: req.user._id,
+      // userId,
     });
 
     const addComment = await newComment.save();
