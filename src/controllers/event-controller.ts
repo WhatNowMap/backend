@@ -13,9 +13,17 @@ module.exports.getAllEvents = async function (req, res) {
     if (location) {
       queryObject.location = location;
     }
-    console.log(queryObject);
 
+    // Pagination
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * 10;
+    console.log(page, limit, skip);
+    
     const foundEvents = await Event.find({ ...queryObject })
+      .sort("createdAt")
+      .limit(limit)
+      .skip(skip)
       .populate('userId', ['userName'])
       .exec();
     res.status(200).send({ data: foundEvents });
