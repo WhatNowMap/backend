@@ -10,12 +10,17 @@ router.get("/", eventController.getAllEvents)
 router.get("/:event_id", eventController.getEventDetails);
 // Get user's event history
 router.get("/host/:user_id", eventController.getUserEventHistory);
-
+// Get a user being voted record
+router.get("/rating/:user_id", eventController.getUserVoteHistory);
+// Get an event vote records
+router.get("/votes/:event_id", eventController.getEventVotes);
 // POST Request
 // Create a new event
 router.post("/", eventController.addNewEvent);
 // Vote Event
 router.post("/eventRating/:event_id/type/:type", eventController.voteEvent)
+// Attend Event
+router.post("/attend/:event_id", eventController.attendEvent);
 
 // Exports
 module.exports = router;
