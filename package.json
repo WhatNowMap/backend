@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.ts",
+    "dev": "nodemon index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,13 +27,14 @@
     "express-session": "^1.17.3",
     "firebase": "^10.1.0",
     "mongoose": "^7.4.2",
+    "oauth": "^0.10.0",
     "multer": "^1.4.5-lts.1",
     "passport": "^0.6.0",
-    "passport-apple": "^2.0.2",
     "passport-facebook": "^3.0.0",
     "passport-google": "^0.3.0",
     "passport-google-oauth2": "^0.2.0",
-    "uuid": "^9.0.0",
-    "xhr2": "^0.2.1"
+    "xhr2": "^0.2.1",
+    "passport-twitter": "^1.0.4",
+    "uuid": "^9.0.0"
   }
 }

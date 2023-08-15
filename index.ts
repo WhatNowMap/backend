@@ -6,13 +6,13 @@ const session = require('express-session');
 // const passport = require('./src/controllers/facebook-auth-controller');
 
 const path = require('path');
-require('./auth');
-
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
-const facebookConfig = require('./src/config/passport.js');
-const facebookAuthController =
-  require('./src/controllers').facebookAuthController;
+const TwitterStrategy = require('passport-twitter').Strategy
+const { facebookAuthController, twitterAuthController, googleAuthController } =
+  require('./src/controllers');
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const { facebookConfig, googleConfig, twitterConfig } = require('./src/config/passport.js');
 
 // Passport OAuth
 passport.use(
@@ -22,6 +22,18 @@ passport.use(
   )
 );
 
+// Twitter OAuth
+passport.use(new TwitterStrategy(
+  twitterConfig,
+  twitterAuthController.handleTwitterAuthentication
+));
+
+passport.use(
+  new GoogleStrategy(
+    googleConfig,
+    googleAuthController.handleAuthentication
+  )
+);
 passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
@@ -35,9 +47,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 // Routing Control
-app.get('/', (req, res) => {
-  res.send('Welcome!');
-});
+// app.get('/', (req, res) => {
+//   res.send('Welcome!');
+// });
 
 const expressSession = session({
   secret: process.env.SESSION_SECRET,

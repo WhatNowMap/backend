@@ -7,7 +7,26 @@ const facebookConfig = {
   profileFields: ['email', 'name'],
 };
 
-module.exports = facebookConfig;
+const twitterConfig = {
+  consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_API_SECRET_KEY,
+  callbackURL: process.env.TWITTER_CALLBACK_URL,
+  passReqToCallback: true
+}
+
+const googleConfig = {
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL,
+  passReqToCallback: true
+};
+
+module.exports = {
+  facebookConfig,
+  googleConfig,
+  twitterConfig
+}
 
 // console.log(facebookConfig);
 
