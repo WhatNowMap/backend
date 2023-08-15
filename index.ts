@@ -6,8 +6,6 @@ const session = require('express-session');
 // const passport = require('./src/controllers/facebook-auth-controller');
 
 const path = require('path');
-require('./auth');
-
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
@@ -23,13 +21,14 @@ passport.use(
   new FacebookStrategy(
     facebookConfig,
     facebookAuthController.handleFacebookAuthentication
-  ),
+  )
+);
+passport.use(
   new GoogleStrategy(
     googleConfig,
     googleAuthController.handleAuthentication
   )
 );
-
 passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
