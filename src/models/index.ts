@@ -8,4 +8,5 @@ module.exports = {
   Upvote: require('./Upvote'),
   User: require('./User'),
   Bookmark: require('./Bookmark'),
+  Attendance: require("./Attendance")
 };
