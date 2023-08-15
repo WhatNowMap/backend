@@ -133,7 +133,7 @@ module.exports.voteEvent = async function (req, res) {
 
 module.exports.addNewEvent = async function (req, res) {
   try {
-    const { name, category, location, lag, lng, description, posterJson } = req.body;
+    const { name, category, location, lag, lng, description, posterJson, mediaIds } = req.body;
     // temporary without userId
     // userId = req.user._id;
     const userId = '64da661a8e8638f42f599f9b';
@@ -146,12 +146,14 @@ module.exports.addNewEvent = async function (req, res) {
       description,
       posterJson,
       userId,
+      mediaIds,
       createdAt: new Date(),
       updatedAt: new Date(),
       ranking: 0,
     });
 
     const savedEvent = await newEvent.save();
+
     res
       .status(200)
       .send({ message: 'The event is created successfully', data: savedEvent });
