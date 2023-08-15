@@ -25,8 +25,9 @@ module.exports.getAllEvents = async function (req, res) {
     // Pagination
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
-    const skip = (page - 1) * 10;
-
+    const skip = (page - 1) * limit;
+    console.log(page, limit, skip);
+    
     const foundEvents = await Event.find({ ...queryObject })
       .sort("createdAt")
       .limit(limit)

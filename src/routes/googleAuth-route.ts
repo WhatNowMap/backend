@@ -4,7 +4,31 @@ const passport = require('passport');
 const { isLoggedIn } = require('../middlewares/auth-middleware')
 const { dirname } = require('path');
 const appDir = dirname(require.main.filename);
+require("dotenv").config()
 
+// router.get('/', (req, res)=>{
+//     res.sendFile(appDir + '/index.html')
+// })
+router.get('/',
+  passport.authenticate('google', {
+    scope:
+      ['email', 'profile']
+  }
+  )
+);
+router.get('/callback',
+  passport.authenticate('google', {
+    successRedirect: '/auth/google/success',
+    failureRedirect: '/auth/google/failure'
+  })
+);
+router.get('/failure', (req, res) => {
+  res.send("Something went wrong!")
+});
+router.get('/success', isLoggedIn, (req, res) => {
+  let name = req.user.userName;
+  res.send(`Hello ${name}`);
+})
 const successRoute = process.env.FRONTEND_PORT
   ? `${process.env.FRONTEND_PORT}/list`
   : '/auth/google/success'
@@ -12,14 +36,14 @@ const failureRoute = process.env.FRONTEND_PORT
   ? `${process.env.FRONTEND_PORT}/`
   : '/auth/google/failure'
 
-router.get('/test', (req, res)=>{
+router.get('/test', (req, res) => {
   res.sendFile(appDir + '/index.html')
 });
 
-router.get('/', passport.authenticate('google', { scope: [ 'email', 'profile' ]}));
+router.get('/', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get('/callback',
-  passport.authenticate( 'google', {
+  passport.authenticate('google', {
     successRedirect: successRoute,
     failureRedirect: failureRoute,
   }),
