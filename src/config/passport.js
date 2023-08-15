@@ -8,16 +8,24 @@ const facebookConfig = {
 };
 
 const googleConfig = {
-  clientID:     process.env.GOOGLE_CLIENT_ID,
+  clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.FACEBOOK_CALLBACK_URL,
   callbackURL: process.env.GOOGLE_CALLBACK_URL,
-  passReqToCallback   : true
+  passReqToCallback: true
 };
+
+const twitterConfig = {
+  consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_API_SECRET_KEY,
+  callbackURL: process.env.TWITTER_CALLBACK_URL,
+  passReqToCallback: true
+}
 
 module.exports = {
   facebookConfig,
-  googleConfig
+  googleConfig,
+  twitterConfig
 }
 
 // console.log(facebookConfig);
