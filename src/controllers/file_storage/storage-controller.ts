@@ -17,7 +17,11 @@ exports.uploadBinary = async function (req, res) {
     const url = await retrieveMedia(userId, mediaId, file.originalname);
     await updateMediaURL(url, mediaId);
 
-    res.status(200).send({ message: "File Received & Uploaded to FireBase" });
+    res.status(200).send({
+      message: "File Received & Uploaded to FireBase",
+      mediaId: mediaId,
+      url: url,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
