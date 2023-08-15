@@ -33,6 +33,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google": "^0.3.0",
     "passport-google-oauth2": "^0.2.0",
+    "xhr2": "^0.2.1",
     "passport-twitter": "^1.0.4",
     "uuid": "^9.0.0"
   }
