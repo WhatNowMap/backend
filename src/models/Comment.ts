@@ -7,6 +7,12 @@ const commentSchema = new Schema(
     comment: String,
     createdAt: Date,
     updatedAt: Date,
+    mediaIds: [
+      {
+        type: ObjectId,
+        ref: "Media",
+      },
+    ],
     eventId: {
       type: ObjectId,
       ref: "Event",
