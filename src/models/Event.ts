@@ -4,10 +4,13 @@ const { Schema, ObjectId } = mongoose;
 const eventSchema = new Schema(
   {
     id: Number,
+    name: {
+      type: String,
+      required: true,
+    },
     category: {
       type: String,
-      enum: ["A", "B", "C"],
-      default: "",
+      enum: ["Music", "Entertainment", "Art", "Food", "Party", "Accident", "Nerd"],
     },
     createdAt: Date,
     updatedAt: Date,
@@ -21,7 +24,20 @@ const eventSchema = new Schema(
         ref: "Media",
       },
     ],
-    ranking: Number,
+    ranking: {
+      like: {
+        type: Number,
+        default: 0,
+      },
+      dislike: {
+        type: Number,
+        default: 0
+      }
+    },
+    attendance: {
+      type: Number,
+      default: 0,
+    },
     userId: {
       type: ObjectId,
       ref: "User",

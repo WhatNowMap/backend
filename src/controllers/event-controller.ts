@@ -7,30 +7,90 @@ const { ObjectId } = mongoose;
 // Functions
 module.exports.getAllEvents = async function (req, res) {
   try {
-    const { location, name, category, sort } = req.query;
-    const queryObject: { location?: string, name?: Object, category?: string, sort?: string } = {};
+    const { location, name, description, category, sort } = req.query;
+    const queryObject: { location?: Object, name?: Object, description?: Object, category?: string, sort?: string,} = {};
 
+    // Keyword Searching
     if (location) {
-      queryObject.location = location;
+      queryObject.name = { $regex: location, $options: "i" };
     }
 
     if (name) {
       queryObject.name = { $regex: name, $options: "i" };
     }
 
+    if (description) {
+      queryObject.description = { $regex: description, $options: "i" }
+    }
+    
+    // Filtering
     if (category) {
       queryObject.category = category
-    }
-
-    if (sort) {
-      queryObject.sort = sort;
     }
 
     // Pagination
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
-    console.log(page, limit, skip);
+
+    // Sorting for distance
+    if (sort === "distance") {
+      console.log("Distance");
+      // Default CN Tower
+      const lag = req.query.lag || 43.642698159339595;
+      const lng = req.query.lng || -79.38703534570423;
+
+      // Aggregation
+      const aggregationPipeline = [
+        {
+          $match: queryObject
+        },
+        {
+          $addFields: {
+            distance: {
+              $sqrt: {
+                $add: [
+                  {
+                    $pow: [
+                      {
+                        $subtract: [
+                          { $toDouble: '$lag' },
+                          43.7605956908427
+                        ]
+                      },
+                      2
+                    ]
+                  },
+                  {
+                    $pow: [
+                      {
+                        $multiply: [
+                          {
+                            $subtract: [
+                              { $toDouble: '$lng' },
+                              -79.4105413273563
+                            ]
+                          },
+                          0.0174533
+                        ]
+                      },
+                      2
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        { $sort: { distance: -1 } }
+      ];
+
+      const foundEvents = await Event.aggregate(aggregationPipeline);
+      console.log(foundEvents);
+
+      return res.status(200).send({ data: foundEvents });
+    }
+
 
     const foundEvents = await Event.find({ ...queryObject })
       .sort(sort)
@@ -38,8 +98,7 @@ module.exports.getAllEvents = async function (req, res) {
       .skip(skip)
       .populate('userId', ['userName'])
       .exec();
-
-    res.status(200).send({ data: foundEvents });
+    return res.status(200).send({ data: foundEvents });
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -83,6 +142,9 @@ module.exports.voteEvent = async function (req, res) {
     const eventId = req.params.event_id;
     const { type } = req.params;
 
+    const foundEvent = await Event.findOne({ _id: eventId });
+
+
     if (type === 'upvote') {
       // Check if user up-voted before
       const foundUpvote = await Upvote.findOne({ userId, eventId }).exec();
@@ -96,13 +158,14 @@ module.exports.voteEvent = async function (req, res) {
 
       if (foundDownvote) {
         await Downvote.findOneAndDelete({ _id: foundDownvote._id }).exec();
+        foundEvent.ranking.dislike -= 1;
       }
 
       const newUpvote = new Upvote({ userId, eventId });
       const savedUpvote = await newUpvote.save();
       // Update the ranking of an event
-      const foundEvent = await Event.findOne({ _id: eventId });
-      foundEvent.ranking += 1;
+      foundEvent.ranking.like += 1;
+
       await foundEvent.save();
 
       return res
@@ -119,13 +182,13 @@ module.exports.voteEvent = async function (req, res) {
 
       if (foundUpvote) {
         await Upvote.findOneAndDelete({ _id: foundUpvote._id }).exec();
+        foundEvent.ranking.like -= 1
       }
 
       const newDownvote = new Downvote({ userId, eventId });
       const savedDownvote = await newDownvote.save();
 
-      const foundEvent = await Event.findOne({ _id: eventId });
-      foundEvent.ranking -= 1;
+      foundEvent.ranking.dislike += 1;
       await foundEvent.save();
 
       return res
@@ -143,7 +206,7 @@ module.exports.addNewEvent = async function (req, res) {
     const { name, category, location, lag, lng, description, posterJson, mediaIds } = req.body;
     // temporary without userId
     // userId = req.user._id;
-    const userId = '64da661a8e8638f42f599f9b';
+    const userId = '64d5293ef60b86a66706e65d';
     const newEvent = new Event({
       name,
       category,
@@ -222,10 +285,11 @@ module.exports.getEventVotes = async function (req, res) {
 module.exports.attendEvent = async function (req, res) {
   try {
     // const userId = req.user._id;
-    const userId = "64da7a95a07af4f59e4f7e3d";
+    const userId = "64d5293ef60b86a66706e65d";
     const eventId = req.params.event_id;
 
     const foundAttendance = await Attendance.findOne({ userId, eventId }).exec();
+
     if (foundAttendance) {
       res.status(400).send({ message: "You already attended to this event" });
     }
@@ -233,8 +297,11 @@ module.exports.attendEvent = async function (req, res) {
     const newAttendance = new Attendance({
       userId, eventId
     });
-
+    const foundEvent = await Event.findOne({ _id: eventId });
+    foundEvent.attendance += 1;
     const savedAttendance = await newAttendance.save();
+    await foundEvent.save();
+
 
     res.status(200).send({ data: savedAttendance });
   }
