@@ -24,10 +24,10 @@ passport.use(
 );
 
 // Twitter OAuth
-passport.use(new TwitterStrategy(
-  twitterConfig,
-  twitterAuthController.handleTwitterAuthentication
-));
+// passport.use(new TwitterStrategy(
+//   twitterConfig,
+//   twitterAuthController.handleTwitterAuthentication
+// ));
 
 passport.use(
   new GoogleStrategy(
