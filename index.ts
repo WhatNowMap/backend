@@ -3,6 +3,7 @@ const app: any = express();
 require('dotenv').config();
 const { connectToMongo } = require('./src/config/mongoose.ts');
 const session = require('express-session');
+const cors = require("cors");
 // const passport = require('./src/controllers/facebook-auth-controller');
 
 const path = require('path');
@@ -45,6 +46,7 @@ passport.deserializeUser(function (obj, cb) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+app.use(cors());
 
 // Routing Control
 // app.get('/', (req, res) => {
