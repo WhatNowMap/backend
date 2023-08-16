@@ -64,8 +64,10 @@ module.exports.getEventDetails = async function (req, res) {
     const foundEvent = await Event.findOne({ _id })
       .populate('userId', ['userName'])
       .exec();
-    console.log(foundEvent);
-    res.status(200).send({ data: foundEvent });
+    const foundUpvote = await Upvote.find({ eventId: _id });
+    const foundDownvote = await Downvote.find({ eventId: _id });
+
+    res.status(200).send({ data: foundEvent, like: foundUpvote.length, dislike: foundDownvote.length });
   } catch (err) {
     res.status(500).send(err);
   }
