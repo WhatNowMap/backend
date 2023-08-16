@@ -7,11 +7,23 @@ const { ObjectId } = mongoose;
 // Functions
 module.exports.getAllEvents = async function (req, res) {
   try {
-    const { location } = req.query;
-    const queryObject: { location?: string } = {};
+    const { location, name, category, sort } = req.query;
+    const queryObject: { location?: string, name?: Object, category?: string, sort?: string } = {};
 
     if (location) {
       queryObject.location = location;
+    }
+
+    if (name) {
+      queryObject.name = { $regex: name, $options: "i" };
+    }
+
+    if (category) {
+      queryObject.category = category
+    }
+
+    if (sort) {
+      queryObject.sort = sort;
     }
 
     // Pagination
@@ -19,13 +31,14 @@ module.exports.getAllEvents = async function (req, res) {
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
     console.log(page, limit, skip);
-    
+
     const foundEvents = await Event.find({ ...queryObject })
-      .sort("createdAt")
+      .sort(sort)
       .limit(limit)
       .skip(skip)
       .populate('userId', ['userName'])
       .exec();
+
     res.status(200).send({ data: foundEvents });
   } catch (err) {
     console.log(err);
@@ -51,8 +64,10 @@ module.exports.getEventDetails = async function (req, res) {
     const foundEvent = await Event.findOne({ _id })
       .populate('userId', ['userName'])
       .exec();
-    console.log(foundEvent);
-    res.status(200).send({ data: foundEvent });
+    const foundUpvote = await Upvote.find({ eventId: _id });
+    const foundDownvote = await Downvote.find({ eventId: _id });
+
+    res.status(200).send({ data: foundEvent, like: foundUpvote.length, dislike: foundDownvote.length });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -125,11 +140,12 @@ module.exports.voteEvent = async function (req, res) {
 
 module.exports.addNewEvent = async function (req, res) {
   try {
-    const { category, location, lag, lng, description, posterJson } = req.body;
+    const { name, category, location, lag, lng, description, posterJson, mediaIds } = req.body;
     // temporary without userId
     // userId = req.user._id;
     const userId = '64da661a8e8638f42f599f9b';
     const newEvent = new Event({
+      name,
       category,
       location,
       lag,
@@ -137,12 +153,14 @@ module.exports.addNewEvent = async function (req, res) {
       description,
       posterJson,
       userId,
+      mediaIds,
       createdAt: new Date(),
       updatedAt: new Date(),
       ranking: 0,
     });
 
     const savedEvent = await newEvent.save();
+
     res
       .status(200)
       .send({ message: 'The event is created successfully', data: savedEvent });
@@ -224,4 +242,20 @@ module.exports.attendEvent = async function (req, res) {
     console.log(err);
     res.status(500).send(err);
   }
+}
+
+module.exports.getAttendance = async function (req, res) {
+  try {
+    const eventId = req.params.event_id;
+    const foundAttendance = await Attendance.find({ eventId }).exec();
+
+    if (foundAttendance.length > 0) {
+      return res.status(200).send({ data: foundAttendance, attendanceAmount: foundAttendance.length })
+    }
+    return res.status(200).send({ message: `There is no attendance record of this event${eventId}` })
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+
 }
