@@ -5,7 +5,7 @@ const userController = require("../controllers").userController;
 
 // Get Request
 // get bookmark
-router.post("/bookmarks", userController.getUserBookmarks)
+router.get("/bookmarks", userController.getUserBookmarks)
 
 // Post Request
 // add bookmark

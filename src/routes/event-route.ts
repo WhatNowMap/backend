@@ -14,6 +14,8 @@ router.get("/host/:user_id", eventController.getUserEventHistory);
 router.get("/rating/:user_id", eventController.getUserVoteHistory);
 // Get an event vote records
 router.get("/votes/:event_id", eventController.getEventVotes);
+// Get attendance record of an event
+router.get("/attend/:event_id", eventController.getAttendance);
 // POST Request
 // Create a new event
 router.post("/", eventController.addNewEvent);
