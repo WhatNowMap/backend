@@ -23,6 +23,13 @@ module.exports.getUserBookmarks = async function (req, res) {
       .find({ userId })
       .limit(limit)
       .skip(skip)
+      .populate({
+        path: "eventId",
+        populate: [{
+          path: 'mediaIds',
+          model: 'Media'
+        }]
+      })
       .exec();
     console.log(bookmarks);
     res.status(200).send(bookmarks);
