@@ -7,25 +7,26 @@ const { ObjectId } = mongoose;
 // Functions
 module.exports.getAllEvents = async function (req, res) {
   try {
-    const { location, name, description, category, sort } = req.query;
-    const queryObject: { location?: Object, name?: Object, description?: Object, category?: string, sort?: string,} = {};
+    const { location, keyword, category, sort } = req.query;
+    const queryObject: { location?: Object, $or?: Object, category?: Object, sort?: string,} = {};
 
     // Keyword Searching
     if (location) {
-      queryObject.name = { $regex: location, $options: "i" };
+      queryObject.location = { $regex: location, $options: "i" };
     }
 
-    if (name) {
-      queryObject.name = { $regex: name, $options: "i" };
-    }
+    // Keyword for both name
+    if (keyword) {
+      queryObject.$or = [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } }
+      ];
 
-    if (description) {
-      queryObject.description = { $regex: description, $options: "i" }
     }
     
     // Filtering
     if (category) {
-      queryObject.category = category
+      queryObject.category = { $regex: category, $options: "i"}
     }
 
     // Pagination
@@ -82,7 +83,8 @@ module.exports.getAllEvents = async function (req, res) {
             }
           }
         },
-        { $sort: { distance: -1 } }
+        { $sort: { distance: -1 } }, 
+        { $limit: 10 } // limit ten results
       ];
 
       const foundEvents = await Event.aggregate(aggregationPipeline);
@@ -91,7 +93,7 @@ module.exports.getAllEvents = async function (req, res) {
       return res.status(200).send({ data: foundEvents });
     }
 
-
+    
     const foundEvents = await Event.find({ ...queryObject })
       .sort(sort)
       .limit(limit)
