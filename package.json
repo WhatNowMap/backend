@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon index.ts",
     "renderStart": "node ./dist/index.js",
+    "renderBuild": "npm install && tsc",
     "dev": "nodemon index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
