@@ -3,6 +3,7 @@ const app: any = express();
 require('dotenv').config();
 const { connectToMongo } = require('./src/config/mongoose.ts');
 const session = require('express-session');
+const User = require('./src/models/User')
 // const passport = require('./src/controllers/facebook-auth-controller');
 
 const path = require('path');
