@@ -1,7 +1,7 @@
 import express from 'express';
 const app: any = express();
 require('dotenv').config();
-const { connectToMongo } = require('./src/config/mongoose');
+const { connectToMongo } = require('./src/config/mongoos.ts');
 const session = require('express-session');
 const cors = require("cors");
 // const passport = require('./src/controllers/facebook-auth-controller');

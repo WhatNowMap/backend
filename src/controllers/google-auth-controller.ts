@@ -1,5 +1,5 @@
 const passport = require('passport');
-const User = require('../models/User.ts');
+const User = require('../models/User');
 
 module.exports.loginSuccessCallback = async (req, res) => {
   try {
