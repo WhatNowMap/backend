@@ -1,7 +1,7 @@
 import { firebaseConfig } from "../../config/firebase";
 
 const admin = require("firebase-admin");
-const serviceAccount = require("path/to/serviceAccountKey.json"); // Download from Firebase Setting
+const serviceAccount = require("../../config/firebase-accountkey.json"); // Download from Firebase Setting
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -19,11 +19,11 @@ const newEventMessage: CloudMessage = {
     title: "WhatNow: New Event Posted",
     body: "An event is happening around you. Check it now.",
   },
-  token: "recipient-device-token", // or 'topic', 'condition', etc.
+  token: "recipient-device-token",
 };
 
 function sendMessage(message: CloudMessage) {
-  // Send the message
+  // Send the cloud message through FCM
   admin
     .messaging()
     .send(message)

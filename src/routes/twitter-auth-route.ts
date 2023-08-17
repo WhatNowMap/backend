@@ -8,8 +8,10 @@ router.get('/',
     }));
 
 router.get('/callback',
-    passport.authenticate('twitter', { failureRedirect: '/login' }),
-    twitterAuthController.loginSuccessCallback
+    passport.authenticate('twitter', {
+        successRedirect: '/auth/twitter/success',
+        failureRedirect: '/auth/twitter/error'
+    })
 );
 
 router.get('/success', twitterAuthController.loginSuccess);

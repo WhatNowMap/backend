@@ -1,6 +1,6 @@
 import express from 'express';
 require('dotenv').config();
-const { connectToMongo } = require('./src/config/mongoose.ts');
+const { connectToMongo } = require('./src/config/mongoose');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');

@@ -20,7 +20,7 @@ const userSchema = new Schema(
   { collection: 'users' }
 );
 
-userSchema.statics.findOrCreate = async function findOrCreate(profile, cb) {
+userSchema.statics.findOrCreate = async function findOrCreate(profile) {
   var userObj = new this();
   const user = await this.findOne({ thirdPartyId: profile.id });
   if (!user) {

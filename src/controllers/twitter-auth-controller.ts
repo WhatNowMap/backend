@@ -1,4 +1,4 @@
-const User = require('../models/User.ts');
+const User = require('../models/User');
 
 
 const loginSuccessCallback = async (req, res) => {
@@ -52,18 +52,25 @@ const signout = async (req, res) => {
 //     });
 // }
 
-const handleTwitterAuthentication = async function (token, tokenSecret, profile, cb) {
+const handleTwitterAuthentication = async function (token, tokenSecret, profile, done) {
     try {
-        User.findOrCreate({ twitterId: profile.id }, function (err, user) {
-            return cb(err, user);
-        });
-
-        // console.log(user);
-        // } else {
-        //   console.log('Twitter User already exist in DB..');
-        // console.log(profile);
-        //   return cb(null, profile);
+        const user = await User.findOrCreate(profile);
+        // const currentUser = await User.findOne({
+        //     twitterId: profile.id_str
+        // });
+        // if (!currentUser) {
+        //     const newUser = await new User({
+        //         userName: profile._json.name,
+        //         screenName: profile._json.screen_name,
+        //         twitterId: profile.id_str,
+        //         profileImageUrl: profile._json.profile_image_url,
+        //         provider: profile.provider
+        //     }).save();
+        //     if (newUser) {
+        //         done(null, newUser);
+        //     }
         // }
+        done(null, user);
     } catch (err) {
         console.log(err);
         throw err;
