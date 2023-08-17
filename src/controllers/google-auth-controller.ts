@@ -41,16 +41,16 @@ module.exports.signout = async (req, res) => {
 };
 
 module.exports.handleAuthentication = async function (
-    request, 
-    accessToken, 
-    refreshToken, 
-    profile, 
-    done
+  request,
+  accessToken,
+  refreshToken,
+  profile,
+  cb
 ) {
-  console.log('handleAuthentication')
+  console.log('handleAuthentication');
   try {
     const user = await User.findOrCreate(profile);
-    return done(null, user);
+    return cb(null, user);
   } catch (err) {
     console.log(err);
     throw err;

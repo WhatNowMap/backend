@@ -1,18 +1,54 @@
 import express from 'express';
-const app: any = express();
 require('dotenv').config();
 const { connectToMongo } = require('./src/config/mongoose.ts');
 const session = require('express-session');
-// const passport = require('./src/controllers/facebook-auth-controller');
-
+const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const cors = require('cors');
+import helmet from 'helmet';
+const User = require('./src/models/User');
 const path = require('path');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
-const TwitterStrategy = require('passport-twitter').Strategy
-const { facebookAuthController, twitterAuthController, googleAuthController } =
-  require('./src/controllers');
+const TwitterStrategy = require('passport-twitter').Strategy;
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
-const { facebookConfig, googleConfig, twitterConfig } = require('./src/config/passport.js');
+
+const app = express();
+
+const expressSession = session({
+  secret: process.env.SESSION_SECRET,
+  name: 'user',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: null,
+    expires: null,
+    httpOnly: true,
+    secure: false,
+  },
+});
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use(helmet());
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(express.json());
+app.use(expressSession);
+app.use(passport.initialize());
+app.use(passport.session());
+
+const {
+  facebookAuthController,
+  twitterAuthController,
+  googleAuthController,
+} = require('./src/controllers');
+
+const {
+  facebookConfig,
+  googleConfig,
+  twitterConfig,
+} = require('./src/config/passport.js');
 
 // Passport OAuth
 passport.use(
@@ -23,45 +59,36 @@ passport.use(
 );
 
 // Twitter OAuth
-passport.use(new TwitterStrategy(
-  twitterConfig,
-  twitterAuthController.handleTwitterAuthentication
-));
-
 passport.use(
-  new GoogleStrategy(
-    googleConfig,
-    googleAuthController.handleAuthentication
+  new TwitterStrategy(
+    twitterConfig,
+    twitterAuthController.handleTwitterAuthentication
   )
 );
-passport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-passport.deserializeUser(function (obj, cb) {
-  cb(null, obj);
+
+passport.use(
+  new GoogleStrategy(googleConfig, googleAuthController.handleAuthentication)
+);
+
+passport.serializeUser((user, cb) => {
+  console.log('Serializing user:', user);
+  cb(null, user._id);
 });
 
-// Post Request
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(passport.initialize());
+passport.deserializeUser(async (id, cb) => {
+  const user = await User.findOne({
+    _id: id,
+  }).catch((err) => {
+    console.log('Error deserializing', err);
+  });
+  console.log('DeSerialized user', user);
+  if (user) cb(null, user);
+});
 
 // Routing Control
-// app.get('/', (req, res) => {
-//   res.send('Welcome!');
-// });
-
-const expressSession = session({
-  secret: process.env.SESSION_SECRET,
-  name: 'user',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false },
+app.get('/', (req, res) => {
+  res.send('Welcome!');
 });
-
-app.use(expressSession);
-app.use(passport.initialize());
-app.use(passport.session());
 
 const port = process.env.PORT || 8080;
 
