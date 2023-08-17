@@ -56,7 +56,7 @@ module.exports.getAllEvents = async function (req, res) {
                       {
                         $subtract: [
                           { $toDouble: '$lag' },
-                          43.7605956908427
+                          lag
                         ]
                       },
                       2
@@ -69,7 +69,7 @@ module.exports.getAllEvents = async function (req, res) {
                           {
                             $subtract: [
                               { $toDouble: '$lng' },
-                              -79.4105413273563
+                              lng
                             ]
                           },
                           0.0174533
