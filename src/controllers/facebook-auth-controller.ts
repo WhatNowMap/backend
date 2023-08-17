@@ -1,8 +1,8 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
-const facebookConfig = require('../config/passport.js');
+const facebookConfig = require('../config/passport');
 
-const User = require('../models/User.ts');
+const User = require('../models/User');
 
 module.exports.loginSuccessCallback = async (req, res) => {
   try {

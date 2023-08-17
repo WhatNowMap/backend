@@ -1,4 +1,4 @@
-const User = require('../models/User.ts');
+const User = require('../models/User');
 
 
 const loginSuccessCallback = async (req, res) => {
