@@ -1,4 +1,4 @@
-const { isUserAuthenticated } = require('../middlewares/auth-middleware.js');
+const { isUserAuthenticated } = require('../middlewares/auth-middleware');
 
 module.exports = {
   eventRouter: require('./event-route'),

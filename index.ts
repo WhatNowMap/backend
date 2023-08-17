@@ -48,7 +48,7 @@ const {
   facebookConfig,
   googleConfig,
   twitterConfig,
-} = require('./src/config/passport.js');
+} = require('./src/config/passport');
 
 // Passport OAuth
 passport.use(
