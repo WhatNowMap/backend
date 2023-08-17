@@ -108,7 +108,7 @@ module.exports.getAllEvents = async function (req, res) {
 };
 
 module.exports.getUserEventHistory = async function (req, res) {
-  const userId = req.params.user_id;
+  const { _id:userId } = req.user;
   try {
     const foundEvents = await Event.find({ userId })
       .populate('userId', ['userName'])
@@ -136,9 +136,7 @@ module.exports.getEventDetails = async function (req, res) {
 
 module.exports.voteEvent = async function (req, res) {
   try {
-    // const userId = req.user._id;
-    // temporary User ID, without real user
-    const userId = '64da7a95a07af4f59e4f7e3d';
+    const { _id:userId } = req.user;
     if (!userId)
       return res.status(400).send({ errorMessage: 'You are not logged in' });
     const eventId = req.params.event_id;
@@ -206,9 +204,7 @@ module.exports.voteEvent = async function (req, res) {
 module.exports.addNewEvent = async function (req, res) {
   try {
     const { name, category, location, lag, lng, description, posterJson, mediaIds } = req.body;
-    // temporary without userId
-    // userId = req.user._id;
-    const userId = '64d5293ef60b86a66706e65d';
+    const { _id:userId } = req.user;
     const newEvent = new Event({
       name,
       category,
@@ -237,7 +233,7 @@ module.exports.addNewEvent = async function (req, res) {
 
 module.exports.getUserVoteHistory = async function (req, res) {
   try {
-    const userId = req.params.user_id;
+    const { _id:userId } = req.user;
     // Find out the event user created
     const eventIdList = await Event.find({ userId }).select("_id").exec();
 
@@ -286,8 +282,7 @@ module.exports.getEventVotes = async function (req, res) {
 
 module.exports.attendEvent = async function (req, res) {
   try {
-    // const userId = req.user._id;
-    const userId = "64d5293ef60b86a66706e65d";
+    const { _id:userId } = req.user;
     const eventId = req.params.event_id;
 
     const foundAttendance = await Attendance.findOne({ userId, eventId }).exec();

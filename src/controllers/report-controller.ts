@@ -3,10 +3,8 @@ const { Report } = require("../models");
 module.exports.report = async function (req, res) {
   const { description, type } = req.body;
   const eventId = req.params.event_id;
-  // const userId = req.user._id;
   // Temporary User Id
-  const userId = "64d5293ef60b86a66706e65d";
-
+  const { _id:userId } = req.user;
   try {
     // check if the user reported the event before
     const foundReport = await Report.findOne({ userId, eventId }).exec();
