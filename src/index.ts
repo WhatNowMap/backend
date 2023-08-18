@@ -58,7 +58,7 @@ const expressSession = session({
   name: 'user',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, sameSite: false },
+  cookie: { secure: false, sameSite: "None" },
 });
 
 app.use(expressSession);
