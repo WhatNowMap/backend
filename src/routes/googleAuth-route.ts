@@ -29,11 +29,11 @@ router.get('/success', isLoggedIn, (req, res) => {
   let name = req.user.userName;
   res.send(`Hello ${name}`);
 })
-const successRoute = process.env.FRONTEND_PORT
-  ? `${process.env.FRONTEND_PORT}/list`
+const successRoute = process.env.FRONTEND_URL
+  ? `${process.env.FRONTEND_URL}/list`
   : '/auth/google/success'
-const failureRoute = process.env.FRONTEND_PORT
-  ? `${process.env.FRONTEND_PORT}/`
+const failureRoute = process.env.FRONTEND_URL
+  ? `${process.env.FRONTEND_URL}/`
   : '/auth/google/failure'
 
 router.get('/test', (req, res) => {

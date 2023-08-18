@@ -2,8 +2,8 @@ const router = require('express').Router();
 const facebookAuthController = require('../controllers').facebookAuthController;
 const passport = require('passport');
 
-const successLoginUrl = 'https://whatnowmap.onrender.com/list';
-const errorLoginUrl = 'https://whatnowmap.onrender.com/login/error';
+const successLoginUrl = `${process.env.FRONTEND_URL}/list`;
+const errorLoginUrl = `${process.env.FRONTEND_URL}/login/error`;
 
 router.get('/', passport.authenticate('facebook', { scope: 'email' }));
 

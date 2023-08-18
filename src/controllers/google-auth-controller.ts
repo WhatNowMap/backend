@@ -4,7 +4,7 @@ const User = require('../models/User');
 module.exports.loginSuccessCallback = async (req, res) => {
   try {
     // Successful authentication, redirect to success screen.
-    res.status(300).redirect('https://whatnowmap.onrender.com/list');
+    res.status(300).redirect(`${process.env.FRONTEND_URL}/list`);
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -47,7 +47,6 @@ module.exports.handleAuthentication = async function (
   profile,
   cb
 ) {
-  console.log('handleAuthentication');
   try {
     const user = await User.findOrCreate(profile);
     return cb(null, user);
