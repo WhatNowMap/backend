@@ -4,7 +4,7 @@ const User = require('../models/User');
 module.exports.loginSuccessCallback = async (req, res) => {
   try {
     // Successful authentication, redirect to success screen.
-    res.status(300).redirect('/auth/google/success');
+    res.status(300).redirect('https://whatnowmap.onrender.com/list');
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
