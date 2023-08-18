@@ -6,14 +6,14 @@ const { ObjectId } = mongoose;
 exports.createComment = async function (req, res) {
   try {
     const { comment, eventId, mediaIds } = req.body;
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     const newComment = new Comment({
       comment,
       eventId,
       mediaIds,
       createAt: new Date(),
       updatedAt: new Date(),
-      userId: req.user._id,
+      userId,
       // userId,
     });
 
@@ -56,7 +56,7 @@ exports.getCommentsforEvent = async function (req, res) {
 // Not necessary at this Stage.
 exports.getCommentsforUser = async function (req, res) {
   try {
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     const comments = await Comment.find({ userId: userId }).exec();
     console.log(comments);
     res.status(200).send(comments);

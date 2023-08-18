@@ -1,6 +1,6 @@
 // Router
 const router = require("express").Router();
-// Import - event controller
+// Import - comment controller
 const commentController = require("../controllers/comment-controller");
 
 // POST Request
