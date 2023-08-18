@@ -9,7 +9,7 @@ const User = require('../models/User');
 // Functions
 module.exports.getUserBookmarks = async function (req, res) {
   try {
-    var userId = "64d5293ef60b86a66706e65d";
+    const { _id:userId } = req.user;
 
     if (!userId) return res.status(400).send({ errorMessage: "Please login" })
 
@@ -23,6 +23,13 @@ module.exports.getUserBookmarks = async function (req, res) {
       .find({ userId })
       .limit(limit)
       .skip(skip)
+      .populate({
+        path: "eventId",
+        populate: [{
+          path: 'mediaIds',
+          model: 'Media'
+        }]
+      })
       .exec();
     console.log(bookmarks);
     res.status(200).send(bookmarks);
@@ -33,8 +40,7 @@ module.exports.getUserBookmarks = async function (req, res) {
 
 module.exports.bookmarkEvent = async function (req, res) {
   try {
-
-    var userId = "64d5293ef60b86a66706e65d";
+    const { _id:userId } = req.user;
     const eventId = req.params.event_id;
     const isBookmark = req.params.is_bookmark == "1";
 
@@ -76,7 +82,7 @@ module.exports.bookmarkEvent = async function (req, res) {
 }
 
 module.exports.updateUserProfile = async (req, res, next) => {
-  const userId = req.params.userId;
+  const { _id:userId } = req.user;
   const userProfile = (req.body as {
     userName: string,
     email: string,
@@ -87,7 +93,7 @@ module.exports.updateUserProfile = async (req, res, next) => {
   res.send(result);
 };
 module.exports.getProfile = async (req, res, next) => {
-  const userId = req.params.userId;
+  const { _id:userId } = req.user;
   const user = await User.findById(userId).select('-_id -__v')
   res.send(user)
 }

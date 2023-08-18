@@ -2,12 +2,18 @@ const router = require('express').Router();
 const facebookAuthController = require('../controllers').facebookAuthController;
 const passport = require('passport');
 
+const successLoginUrl = 'https://whatnowmap.onrender.com/list';
+const errorLoginUrl = 'https://whatnowmap.onrender.com/login/error';
+
 router.get('/', passport.authenticate('facebook', { scope: 'email' }));
 
 router.get(
   '/callback',
   passport.authenticate('facebook', {
-    failureRedirect: '/auth/facebook/error',
+    failureMessage: 'Cannot login to Facebook, please try again later!',
+    // failureRedirect: '/auth/facebook/error',
+    failureRedirect: errorLoginUrl,
+    successRedirect: successLoginUrl,
   }),
   facebookAuthController.loginSuccessCallback
 );

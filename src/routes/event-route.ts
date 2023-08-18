@@ -9,9 +9,9 @@ router.get("/", eventController.getAllEvents)
 // Get the details of an event
 router.get("/:event_id", eventController.getEventDetails);
 // Get user's event history
-router.get("/host/:user_id", eventController.getUserEventHistory);
+router.get("/host", eventController.getUserEventHistory);
 // Get a user being voted record
-router.get("/rating/:user_id", eventController.getUserVoteHistory);
+router.get("/rating", eventController.getUserVoteHistory);
 // Get an event vote records
 router.get("/votes/:event_id", eventController.getEventVotes);
 // Get attendance record of an event

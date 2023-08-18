@@ -1,13 +1,13 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
-const facebookConfig = require('../config/passport.js');
+const facebookConfig = require('../config/passport');
 
-const User = require('../models/User.ts');
+const User = require('../models/User');
 
 module.exports.loginSuccessCallback = async (req, res) => {
   try {
     // Successful authentication, redirect to success screen.
-    res.status(300).redirect('/auth/facebook/success');
+    res.status(300).redirect('https://whatnowmap.onrender.com/list');
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -56,21 +56,7 @@ module.exports.handleFacebookAuthentication = async function (
 ) {
   try {
     const user = await User.findOrCreate(profile);
-    // console.log('Adding new facebook user to DB..');
-
-    // console.log(profile);
-    // const user = new User({
-    //   id: profile.id,
-    //   userName: profile.displayName,
-    //   provider: profile.provider,
-    // });
-    // console.log(user);
     return cb(null, user);
-    // } else {
-    //   console.log('Facebook User already exist in DB..');
-    //   // console.log(profile);
-    //   return cb(null, profile);
-    // }
   } catch (err) {
     console.log(err);
     throw err;

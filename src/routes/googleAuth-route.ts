@@ -16,12 +16,12 @@ router.get('/',
   }
   )
 );
-router.get('/callback',
-  passport.authenticate('google', {
-    successRedirect: '/auth/google/success',
-    failureRedirect: '/auth/google/failure'
-  })
-);
+// router.get('/callback',
+//   passport.authenticate('google', {
+//     successRedirect: '/auth/google/success',
+//     failureRedirect: '/auth/google/failure'
+//   })
+// );
 router.get('/failure', (req, res) => {
   res.send("Something went wrong!")
 });
