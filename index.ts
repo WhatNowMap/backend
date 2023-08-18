@@ -25,6 +25,7 @@ const expressSession = session({
     expires: null,
     httpOnly: true,
     secure: false,
+    sameSite: "None",
   },
 });
 
