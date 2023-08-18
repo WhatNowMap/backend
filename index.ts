@@ -23,8 +23,8 @@ const expressSession = session({
   cookie: {
     maxAge: null,
     expires: null,
-    httpOnly: true,
-    secure: false,
+    httpOnly: false,
+    secure: true,
     sameSite: "None",
   },
 });
