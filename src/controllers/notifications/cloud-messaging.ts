@@ -1,6 +1,5 @@
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { firebaseConfig } from "../../config/firebase";
-import { onBackgroundMessage } from "firebase/messaging/sw";
 import { initializeApp } from "firebase/app";
 import "dotenv/config";
 

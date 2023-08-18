@@ -1,10 +1,4 @@
 import { CloudMessage, sendMessage } from "./admin-send-message";
-import {
-  initializeCloudMessaging,
-  requestPermission,
-  receiveMessage,
-} from "./cloud-messaging";
-
 exports.notify = async function (req, res) {
   try {
     const cloudMessage: CloudMessage = {
