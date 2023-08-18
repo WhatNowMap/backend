@@ -24,7 +24,7 @@ const expressSession = session({
     maxAge: null,
     expires: null,
     httpOnly: true,
-    secure: true,
+    secure: false,
     sameSite: "Lax",
   },
 });
