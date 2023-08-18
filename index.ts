@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(helmet());
-app.use(cors({ origin: 'https://whatnowmap.onrender.com/', credentials: true }));
+app.use(cors({ origin: 'https://whatnowmap.onrender.com', credentials: true }));
 app.use(express.json());
 app.use(expressSession);
 app.use(passport.initialize());
