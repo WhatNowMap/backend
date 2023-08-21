@@ -38,12 +38,6 @@ app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://whatnowmap.onrender.com');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  next();
-});
-
 const {
   facebookAuthController,
   twitterAuthController,
