@@ -28,7 +28,7 @@ const storage = getStorage(app);
 function initializeAdminApp() {
   // Send the cloud message through FCM
   const admin = require("firebase-admin");
-  const serviceAccount = require("../config/firebase-accountKey.json"); // Download from Firebase Setting
+  const { serviceAccount } = require("../config/firebase-accountKey"); // Download from Firebase Setting
   // Initialize Firebase Admin SDK
   return admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
