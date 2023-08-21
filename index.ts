@@ -32,14 +32,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(helmet());
-app.use(cors({ origin: 'https://whatnowmap-api.onrender.com', credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://whatnowmap-api.onrender.com');
+  res.setHeader('Access-Control-Allow-Origin', 'https://whatnowmap.onrender.com');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
