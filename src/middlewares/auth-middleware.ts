@@ -4,6 +4,7 @@ const isLoggedIn = (req, res, next) => {
 };
 
 const isUserAuthenticated = (req, res, next) => {
+  console.log(req.session.passport)
   if (req.user) {
     next();
   } else {
