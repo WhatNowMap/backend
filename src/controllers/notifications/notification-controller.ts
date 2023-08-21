@@ -1,3 +1,4 @@
+import { adminApp } from "../../config/firebase";
 import { CloudMessage, sendMessage } from "./admin-send-message";
 exports.notify = async function (req, res) {
   try {
@@ -8,7 +9,8 @@ exports.notify = async function (req, res) {
       },
       topic: "all_user",
     };
-    sendMessage(cloudMessage);
+    const admin = adminApp;
+    sendMessage(cloudMessage, admin);
     res.status(200).send({ message: "Notify Successfully.", cloudMessage });
 
     // Receiving Test:

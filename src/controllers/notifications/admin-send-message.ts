@@ -6,16 +6,7 @@ interface CloudMessage {
   topic: string;
 }
 
-function sendMessage(message: CloudMessage) {
-  // Send the cloud message through FCM
-  const admin = require("firebase-admin");
-  const serviceAccount = require("../../config/firebase-accountkey.json"); // Download from Firebase Setting
-  // Initialize Firebase Admin SDK
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    ...firebaseConfig,
-  });
-
+function sendMessage(message: CloudMessage, admin) {
   // Compose the message
   const newEventMessage: CloudMessage = {
     notification: {

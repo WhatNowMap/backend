@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getStorage } from "firebase/storage";
 
-import 'dotenv/config';
+import "dotenv/config";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,5 +25,17 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 // console.log(firebaseConfig);
+function initializeAdminApp() {
+  // Send the cloud message through FCM
+  const admin = require("firebase-admin");
+  const serviceAccount = require("../config/firebase-accountKey.json"); // Download from Firebase Setting
+  // Initialize Firebase Admin SDK
+  return admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    ...firebaseConfig,
+  });
+}
 
-export { firebaseConfig, app, storage };
+const adminApp = initializeAdminApp();
+
+export { adminApp, firebaseConfig, app, storage };
