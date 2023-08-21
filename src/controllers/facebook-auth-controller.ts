@@ -7,7 +7,12 @@ const User = require('../models/User');
 module.exports.loginSuccessCallback = async (req, res) => {
   try {
     // Successful authentication, redirect to success screen.
-    res.status(300).redirect(`${process.env.FRONTEND_URL}/list`);
+
+    // console.log('req.session.passport.user', req.headers.cookie);
+    res
+      .status(300)
+      .cookie('userTest', req.headers.cookie, { maxAge: 3600000 })
+      .redirect(`${process.env.FRONTEND_URL}/list`);
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -16,6 +21,7 @@ module.exports.loginSuccessCallback = async (req, res) => {
 
 module.exports.loginSuccess = async (req, res) => {
   try {
+    // console.log('req.session.passport.user', req);
     //   const userInfo = {
     //     id: req.session.passport.user.id,
     //     displayName: req.session.passport.user.displayName,
@@ -55,6 +61,7 @@ module.exports.handleFacebookAuthentication = async function (
   cb
 ) {
   try {
+    // console.log('handleFacebookAuthentication', profile);
     const user = await User.findOrCreate(profile);
     return cb(null, user);
   } catch (err) {
