@@ -1,6 +1,8 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../config/firebase";
+import { app } from "../../config/firebase";
+
 const { Media } = require("../../models");
 const mongoose = require("mongoose");
 
@@ -36,7 +38,7 @@ async function uploadFileToFirebase(file, userId, mediaId) {
   const destinationPath = `${userId}/${mediaId}/${file.originalname}`;
 
   // Create a root reference
-  const app = initializeApp(firebaseConfig);
+  // const app = initializeApp(firebaseConfig);
   const storage = getStorage(app);
   const metadata = {
     contentType: file.mimetype,
@@ -74,7 +76,7 @@ async function getURLfromRef(storage, ref) {
  * @param mediaPath path field in mongo db
  */
 async function retrieveMedia(userId, mediaId, mediaPath) {
-  const app = initializeApp(firebaseConfig);
+  // const app = initializeApp(firebaseConfig);
   const storage = getStorage(app);
   const pathRef = ref(storage, `${userId}/${mediaId}/${mediaPath}`);
   try {

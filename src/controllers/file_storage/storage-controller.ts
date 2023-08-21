@@ -8,7 +8,7 @@ import {
 exports.uploadBinary = async function (req, res) {
   try {
     const file = req.file;
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     console.log(req.file);
     const destinationPath = `${file.originalname}`;
     const mediaId = await addNewMediatoMongoDB(destinationPath, userId);
