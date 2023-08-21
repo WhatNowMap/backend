@@ -8,7 +8,7 @@ const { ObjectId } = mongoose;
 module.exports.getAllEvents = async function (req, res) {
   try {
     const { location, keyword, category, sort } = req.query;
-    const queryObject: { location?: Object, $or?: Object, category?: Object, sort?: string,} = {};
+    const queryObject: { location?: Object, $or?: Object, category?: Object, sort?: string, } = {};
 
     // Keyword Searching
     if (location) {
@@ -23,10 +23,10 @@ module.exports.getAllEvents = async function (req, res) {
       ];
 
     }
-    
+
     // Filtering
     if (category) {
-      queryObject.category = { $regex: category, $options: "i"}
+      queryObject.category = { $regex: category, $options: "i" }
     }
 
     // Pagination
@@ -56,7 +56,7 @@ module.exports.getAllEvents = async function (req, res) {
                       {
                         $subtract: [
                           { $toDouble: '$lag' },
-                          43.7605956908427
+                          lag
                         ]
                       },
                       2
@@ -69,7 +69,7 @@ module.exports.getAllEvents = async function (req, res) {
                           {
                             $subtract: [
                               { $toDouble: '$lng' },
-                              -79.4105413273563
+                              lng
                             ]
                           },
                           0.0174533
@@ -83,7 +83,7 @@ module.exports.getAllEvents = async function (req, res) {
             }
           }
         },
-        { $sort: { distance: -1 } }, 
+        { $sort: { distance: -1 } },
         { $limit: 10 } // limit ten results
       ];
 
@@ -93,7 +93,7 @@ module.exports.getAllEvents = async function (req, res) {
       return res.status(200).send({ data: foundEvents });
     }
 
-    
+
     const foundEvents = await Event.find({ ...queryObject })
       .sort(sort)
       .limit(limit)
@@ -212,7 +212,6 @@ module.exports.addNewEvent = async function (req, res) {
       lag,
       lng,
       description,
-      posterJson,
       userId,
       mediaIds,
       createdAt: new Date(),
@@ -322,4 +321,20 @@ module.exports.getAttendance = async function (req, res) {
     res.status(500).send(err);
   }
 
+}
+
+module.exports.checkoutEvent = async function (req, res) {
+  const userId = req.user._id;
+  const eventId = req.params.event_id;
+
+  const foundAttendance = await Attendance.findOneAndDelete({ userId, eventId }).exec();
+  if (!foundAttendance) {
+    return res.status(400).send({ message: "You haven't attended this event before" });
+  }
+
+  const foundEvent = await Event.findOne({ eventId }).exec();
+  foundEvent.attendance -= 1;
+  await foundEvent.save();
+
+  return res.status(200).send({ data: foundEvent });
 }
