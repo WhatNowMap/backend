@@ -7,7 +7,7 @@ const { ObjectId } = mongoose;
 // Functions
 module.exports.getAllEvents = async function (req, res) {
   try {
-    const { location, keyword, category, sort } = req.query;
+    let { location, keyword, category, sort } = req.query;
     const queryObject: { location?: Object, $or?: Object, category?: Object, sort?: string, } = {};
 
     // Keyword Searching
@@ -36,7 +36,6 @@ module.exports.getAllEvents = async function (req, res) {
 
     // Sorting for distance
     if (sort === "distance") {
-      console.log("Distance");
       // Default CN Tower
       const lag = req.query.lag || 43.642698159339595;
       const lng = req.query.lng || -79.38703534570423;
@@ -93,6 +92,10 @@ module.exports.getAllEvents = async function (req, res) {
       return res.status(200).send({ data: foundEvents });
     }
 
+    if (sort === "createdAt") {
+      sort = "-createdAt"
+    }
+
 
     const foundEvents = await Event.find({ ...queryObject })
       .sort(sort)
@@ -108,7 +111,7 @@ module.exports.getAllEvents = async function (req, res) {
 };
 
 module.exports.getUserEventHistory = async function (req, res) {
-  const { _id:userId } = req.user;
+  const { _id: userId } = req.user;
   try {
     const foundEvents = await Event.find({ userId })
       .populate('userId', ['userName'])
@@ -136,7 +139,7 @@ module.exports.getEventDetails = async function (req, res) {
 
 module.exports.voteEvent = async function (req, res) {
   try {
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     if (!userId)
       return res.status(400).send({ errorMessage: 'You are not logged in' });
     const eventId = req.params.event_id;
@@ -204,7 +207,7 @@ module.exports.voteEvent = async function (req, res) {
 module.exports.addNewEvent = async function (req, res) {
   try {
     const { name, category, location, lag, lng, description, posterJson, mediaIds } = req.body;
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     const newEvent = new Event({
       name,
       category,
@@ -232,7 +235,7 @@ module.exports.addNewEvent = async function (req, res) {
 
 module.exports.getUserVoteHistory = async function (req, res) {
   try {
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     // Find out the event user created
     const eventIdList = await Event.find({ userId }).select("_id").exec();
 
@@ -281,7 +284,7 @@ module.exports.getEventVotes = async function (req, res) {
 
 module.exports.attendEvent = async function (req, res) {
   try {
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     const eventId = req.params.event_id;
 
     const foundAttendance = await Attendance.findOne({ userId, eventId }).exec();
