@@ -13,7 +13,7 @@ router.get(
     failureMessage: 'Cannot login to Facebook, please try again later!',
     // failureRedirect: '/auth/facebook/error',
     failureRedirect: errorLoginUrl,
-    successRedirect: successLoginUrl,
+    // successRedirect: successLoginUrl,
   }),
   facebookAuthController.loginSuccessCallback
 );

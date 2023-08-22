@@ -1,4 +1,4 @@
-{
+const serviceAccount = {
   "type": "service_account",
   "project_id": "whatnowmap-395517",
   "private_key_id": "b02999b62aaab8135d00577c709d7065f6a36b78",
@@ -11,3 +11,5 @@
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ocwq5%40whatnowmap-395517.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
 }
+
+module.exports={ serviceAccount }

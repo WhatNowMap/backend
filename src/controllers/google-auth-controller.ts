@@ -4,7 +4,11 @@ const User = require('../models/User');
 module.exports.loginSuccessCallback = async (req, res) => {
   try {
     // Successful authentication, redirect to success screen.
-    res.status(300).redirect(`${process.env.FRONTEND_URL}/list`);
+
+    res
+      .status(300)
+      .cookie('userTest', req.headers.cookie, { maxAge: 3600000 })
+      .redirect(`${process.env.FRONTEND_URL}/list`);
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -13,7 +17,10 @@ module.exports.loginSuccessCallback = async (req, res) => {
 
 module.exports.success = async (req, res) => {
   try {
-    res.status(200).send('Google login success!');
+    res
+      .status(200)
+      .cookie('userTest', req.headers.cookie, { maxAge: 3600000 })
+      .send('Google login success!');
   } catch (err) {
     console.log(err);
     res.status(500).send(err);

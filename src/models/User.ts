@@ -29,9 +29,10 @@ userSchema.statics.findOrCreate = async function findOrCreate(profile) {
     userObj.email = profile.email;
     userObj.provider = profile.provider;
     const newUser = await userObj.save();
+    console.log('no user', newUser);
     return newUser;
   } else {
-    console.log('User is in the database!');
+    // console.log('User is in the database!', user);
     return user;
   }
 };

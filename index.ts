@@ -1,31 +1,32 @@
-import express from "express";
-require("dotenv").config();
-const { connectToMongo } = require("./src/config/mongoose");
-const session = require("express-session");
-const bodyParser = require("body-parser");
-const cookieSession = require("cookie-session");
-const cors = require("cors");
-import helmet from "helmet";
-const User = require("./src/models/User");
-const path = require("path");
-const passport = require("passport");
-const FacebookStrategy = require("passport-facebook").Strategy;
-const TwitterStrategy = require("passport-twitter").Strategy;
-const GoogleStrategy = require("passport-google-oauth2").Strategy;
+import express from 'express';
+require('dotenv').config();
+const { connectToMongo } = require('./src/config/mongoose');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const cors = require('cors');
+import helmet from 'helmet';
+const User = require('./src/models/User');
+const path = require('path');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 const app = express();
 
 const expressSession = session({
   secret: process.env.SESSION_SECRET,
-  name: "user",
+  name: 'user',
   resave: false,
   saveUninitialized: true,
   cookie: {
     maxAge: null,
     expires: null,
-    httpOnly: true,
-    secure: false,
-  },
+    httpOnly: process.env.NODE_ENV === "development" ? false : true,
+    secure: process.env.NODE_ENV === "development" ? false : true,
+    sameSite: process.env.NODE_ENV === "development" ? "" : "none",
+  }
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,13 +43,13 @@ const {
   facebookAuthController,
   twitterAuthController,
   googleAuthController,
-} = require("./src/controllers");
+} = require('./src/controllers');
 
 const {
   facebookConfig,
   googleConfig,
   twitterConfig,
-} = require("./src/config/passport");
+} = require('./src/config/passport');
 
 // Passport OAuth
 passport.use(
@@ -71,30 +72,34 @@ passport.use(
 );
 
 passport.serializeUser((user, cb) => {
-  console.log("Serializing user:", user);
+  console.log('Serializing user:', user);
   cb(null, user._id);
 });
 
 passport.deserializeUser(async (id, cb) => {
+  console.log('DeserializeUser::id', id);
   const user = await User.findOne({
     _id: id,
   }).catch((err) => {
-    console.log("Error deserializing", err);
+    console.log('Error deserializing', err);
   });
-  console.log("DeSerialized user", user);
+  console.log('DeserializeUser::user', user);
   if (user) cb(null, user);
 });
 
 // Routing Control
-app.get("/", (req, res) => {
-  res.send("Welcome!");
+app.get('/', (req, res) => {
+  res.send('Welcome!');
 });
 
 const port = process.env.PORT || 8080;
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 
-require("./src/routes")(app);
+require('./src/routes')(app);
 app.listen(port, async () => {
-  console.log("The server is running on " + port);
+  console.log('The server is running on ' + port);
   connectToMongo();
 });
 
