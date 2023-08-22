@@ -7,8 +7,8 @@ const { ObjectId } = mongoose;
 // Functions
 module.exports.getAllEvents = async function (req, res) {
   try {
-    const { location, keyword, category, sort } = req.query;
-    const queryObject: { location?: Object, $or?: Object, category?: Object, sort?: string,} = {};
+    let { location, keyword, category, sort } = req.query;
+    const queryObject: { location?: Object, $or?: Object, category?: Object, sort?: string, } = {};
 
     // Keyword Searching
     if (location) {
@@ -23,10 +23,10 @@ module.exports.getAllEvents = async function (req, res) {
       ];
 
     }
-    
+
     // Filtering
     if (category) {
-      queryObject.category = { $regex: category, $options: "i"}
+      queryObject.category = { $regex: category, $options: "i" }
     }
 
     // Pagination
@@ -36,7 +36,6 @@ module.exports.getAllEvents = async function (req, res) {
 
     // Sorting for distance
     if (sort === "distance") {
-      console.log("Distance");
       // Default CN Tower
       const lag = req.query.lag || 43.642698159339595;
       const lng = req.query.lng || -79.38703534570423;
@@ -56,7 +55,7 @@ module.exports.getAllEvents = async function (req, res) {
                       {
                         $subtract: [
                           { $toDouble: '$lag' },
-                          43.7605956908427
+                          lag
                         ]
                       },
                       2
@@ -69,7 +68,7 @@ module.exports.getAllEvents = async function (req, res) {
                           {
                             $subtract: [
                               { $toDouble: '$lng' },
-                              -79.4105413273563
+                              lng
                             ]
                           },
                           0.0174533
@@ -83,7 +82,7 @@ module.exports.getAllEvents = async function (req, res) {
             }
           }
         },
-        { $sort: { distance: -1 } }, 
+        { $sort: { distance: -1 } },
         { $limit: 10 } // limit ten results
       ];
 
@@ -93,7 +92,11 @@ module.exports.getAllEvents = async function (req, res) {
       return res.status(200).send({ data: foundEvents });
     }
 
-    
+    if (sort === "createdAt") {
+      sort = "-createdAt"
+    }
+
+
     const foundEvents = await Event.find({ ...queryObject })
       .sort(sort)
       .limit(limit)
@@ -108,7 +111,7 @@ module.exports.getAllEvents = async function (req, res) {
 };
 
 module.exports.getUserEventHistory = async function (req, res) {
-  const { _id:userId } = req.user;
+  const { _id: userId } = req.user;
   try {
     const foundEvents = await Event.find({ userId })
       .populate('userId', ['userName'])
@@ -136,7 +139,7 @@ module.exports.getEventDetails = async function (req, res) {
 
 module.exports.voteEvent = async function (req, res) {
   try {
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     if (!userId)
       return res.status(400).send({ errorMessage: 'You are not logged in' });
     const eventId = req.params.event_id;
@@ -204,7 +207,7 @@ module.exports.voteEvent = async function (req, res) {
 module.exports.addNewEvent = async function (req, res) {
   try {
     const { name, category, location, lag, lng, description, posterJson, mediaIds } = req.body;
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     const newEvent = new Event({
       name,
       category,
@@ -212,7 +215,6 @@ module.exports.addNewEvent = async function (req, res) {
       lag,
       lng,
       description,
-      posterJson,
       userId,
       mediaIds,
       createdAt: new Date(),
@@ -233,7 +235,7 @@ module.exports.addNewEvent = async function (req, res) {
 
 module.exports.getUserVoteHistory = async function (req, res) {
   try {
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     // Find out the event user created
     const eventIdList = await Event.find({ userId }).select("_id").exec();
 
@@ -282,7 +284,7 @@ module.exports.getEventVotes = async function (req, res) {
 
 module.exports.attendEvent = async function (req, res) {
   try {
-    const { _id:userId } = req.user;
+    const { _id: userId } = req.user;
     const eventId = req.params.event_id;
 
     const foundAttendance = await Attendance.findOne({ userId, eventId }).exec();
@@ -322,4 +324,20 @@ module.exports.getAttendance = async function (req, res) {
     res.status(500).send(err);
   }
 
+}
+
+module.exports.checkoutEvent = async function (req, res) {
+  const userId = req.user._id;
+  const eventId = req.params.event_id;
+
+  const foundAttendance = await Attendance.findOneAndDelete({ userId, eventId }).exec();
+  if (!foundAttendance) {
+    return res.status(400).send({ message: "You haven't attended this event before" });
+  }
+
+  const foundEvent = await Event.findOne({ eventId }).exec();
+  foundEvent.attendance -= 1;
+  await foundEvent.save();
+
+  return res.status(200).send({ data: foundEvent });
 }
