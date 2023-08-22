@@ -82,6 +82,25 @@ module.exports.getAllEvents = async function (req, res) {
             }
           }
         },
+        // {
+        //   $lookup: {
+        //     from: "users", 
+        //     localField: "userId",
+        //     foreignField: "_id",
+        //     as: "user"
+        //   }
+        // },
+        // {
+        //   $unwind: "$user"
+        // },
+        // {
+        //   $lookup: {
+        //     from: "medias", 
+        //     localField: "mediaIds",
+        //     foreignField: "_id",
+        //     as: "media"
+        //   }
+        // },
         { $sort: { distance: -1 } },
         { $limit: 10 } // limit ten results
       ];
@@ -102,6 +121,7 @@ module.exports.getAllEvents = async function (req, res) {
       .limit(limit)
       .skip(skip)
       .populate('userId', ['userName'])
+      .populate("mediaIds", ["url"])
       .exec();
     return res.status(200).send({ data: foundEvents });
   } catch (err) {
@@ -127,6 +147,7 @@ module.exports.getEventDetails = async function (req, res) {
   try {
     const foundEvent = await Event.findOne({ _id })
       .populate('userId', ['userName'])
+      .populate("mediaIds", ["url"])
       .exec();
     const foundUpvote = await Upvote.find({ eventId: _id });
     const foundDownvote = await Downvote.find({ eventId: _id });
