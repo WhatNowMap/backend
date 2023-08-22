@@ -24,7 +24,7 @@ const expressSession = session({
     maxAge: null,
     expires: null,
     httpOnly: false,
-    secure: true,
+    secure: false,
   },
 });
 
@@ -92,6 +92,9 @@ app.get('/', (req, res) => {
 });
 
 const port = process.env.PORT || 8080;
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 
 require('./src/routes')(app);
 app.listen(port, async () => {
