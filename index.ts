@@ -23,9 +23,10 @@ const expressSession = session({
   cookie: {
     maxAge: null,
     expires: null,
-    httpOnly: false,
-    secure: false,
-  },
+    httpOnly: process.env.NODE_ENV === "development" ? false : true,
+    secure: process.env.NODE_ENV === "development" ? false : true,
+    sameSite: process.env.NODE_ENV === "development" ? "" : "none",
+  }
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
