@@ -16,7 +16,7 @@ const faceBookAuthRouter = require("./facebookAuth-route");
 const twitterAuthRouter = require("./twitter-auth-route");
 const commentRouter = require("./comment-route");
 const storageRouter = require("./storage-route");
-const testRouter = require("./notification-test-route");
+const testRouter = require("./notification-route");
 
 // Routing Control
 module.exports = function (app) {

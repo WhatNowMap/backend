@@ -9,9 +9,10 @@ interface CloudMessage {
 function sendMessage(message: CloudMessage, admin) {
   // Compose the message
   const newEventMessage: CloudMessage = {
+
     notification: {
-      title: "WhatNow: New Event Posted",
-      body: "An event is happening around you. Check it now.",
+        title: "WhatNow: New Event Posted",
+        body: "An event is happening around you. Check it now.",
     },
     topic: "all_user",
     // token: "recipient-device-token", // Token: A Registration Token belongs to A certain User
